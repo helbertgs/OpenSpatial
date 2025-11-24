@@ -1,7 +1,7 @@
 import Foundation
 
 /// A three-element vector.
-@frozen public struct Vector3D : Codable, Equatable, Hashable, Sendable, SendableMetatype {
+@frozen public struct Vector3D : Codable, Equatable, Hashable, Sendable {
 
     // MARK: - Creating a vector
 
