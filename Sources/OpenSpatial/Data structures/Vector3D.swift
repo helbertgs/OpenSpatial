@@ -1,7 +1,7 @@
 import Foundation
 
 /// A three-element vector.
-@frozen public struct Vector3D {
+@frozen public struct Vector3D : Codable, Equatable, Hashable, Sendable, SendableMetatype {
 
     // MARK: - Creating a vector
 
@@ -43,6 +43,29 @@ import Foundation
 
     /// The z-element value.
     public let z: Double
+
+    // MARK: - Geometry functions
+
+    /// Returns the cross product of the vector and the specified vector.
+    /// 
+    /// - Parameter other: The second vector.
+    /// - Returns: The cross product vector.
+    @inline(__always)
+    public func cross(_ other: Vector3D) -> Vector3D {
+        .init(
+            x: y * other.z - z * other.y,
+            y: z * other.x - x * other.z,
+            z: x * other.y - y * other.x
+        )
+    }
+
+    /// Returns the dot product of the vector and the specified vector.
+    /// 
+    /// - Parameter other: The second vector.
+    /// - Returns: The dot product value.
+    @inline(__always)
+    public func dot(_ other: Vector3D) -> Double {
+        x * other.x + y * other.y + z * other.z}
 }
 
 extension Vector3D : ExpressibleByArrayLiteral {
@@ -54,5 +77,53 @@ extension Vector3D : ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Double...) {
         precondition(elements.count == 3, "Array literal must contain exactly three elements.")
         (x, y, z) = (elements[0], elements[1], elements[2])
+    }
+}
+
+extension Vector3D : AdditiveArithmetic {
+
+    /// The zero vector.
+    public static let zero = Vector3D()
+
+    /// Adds two vectors and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    /// - Returns: The sum of the two vectors.
+    @inline(__always)
+    public static func + (lhs: Vector3D, rhs: Vector3D) -> Vector3D {
+        .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
+    }
+
+    /// Adds the second vector to the first vector and stores the result in the first vector.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    @inline(__always)
+    public static func += (lhs: inout Vector3D, rhs: Vector3D) {
+        lhs = lhs + rhs
+    }
+
+    /// Subtracts one vector from another and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    /// - Returns: The difference of the two vectors.
+    @inline(__always)
+    public static func - (lhs: Vector3D, rhs: Vector3D) -> Vector3D {
+        .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
+    }
+
+    /// Subtracts the second vector from the first vector and stores the result in the first vector.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    @inline(__always)
+    public static func -= (lhs: inout Vector3D, rhs: Vector3D) {
+        lhs = lhs - rhs
     }
 }

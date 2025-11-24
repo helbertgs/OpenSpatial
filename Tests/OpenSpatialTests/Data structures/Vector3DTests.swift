@@ -2,6 +2,9 @@ import Testing
 @testable import OpenSpatial
 
 struct Vector3DTests {
+
+    // MARK: - Initialization tests
+
     @Test func testInitialization() {
         let vector = Vector3D()
         #expect(vector.x == 0.0)
@@ -28,5 +31,56 @@ struct Vector3DTests {
         #expect(vector.x == 1.0)
         #expect(vector.y == 2.0)
         #expect(vector.z == 3.0)
+    }
+
+    // MARK: - Geometry functions tests
+
+    @Test func testDotProduct() {
+        let vector1 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let vector2 = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let dotProduct = vector1.dot(vector2)
+        #expect(dotProduct == 32.0) // 1*4 + 2*5 + 3*6 = 32
+    }
+
+    @Test func testCrossProduct() {
+        let vector1 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let vector2 = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let crossProduct = vector1.cross(vector2)
+        #expect(crossProduct == Vector3D(x: -3.0, y: 6.0, z: -3.0)) // Cross product result
+    }
+
+    // MARK: - AdditiveArithmetic tests
+
+    @Test func testZeroVector() {
+        let zeroVector = Vector3D.zero
+        #expect(zeroVector == Vector3D(x: 0.0, y: 0.0, z: 0.0))
+    }
+
+    @Test func testAddition() {
+        let vector1 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let vector2 = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let sum = vector1 + vector2
+        #expect(sum == Vector3D(x: 5.0, y: 7.0, z: 9.0))
+    }
+
+    @Test func testAddition2() {
+        var vector1 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let vector2 = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        vector1 += vector2
+        #expect(vector1 == Vector3D(x: 5.0, y: 7.0, z: 9.0))
+    }
+
+    @Test func testSubtraction() {
+        let vector1 = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let vector2 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let difference = vector1 - vector2
+        #expect(difference == Vector3D(x: 3.0, y: 3.0, z: 3.0))
+    }
+
+    @Test func testSubtraction2() {
+        var vector1 = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let vector2 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        vector1 -= vector2
+        #expect(vector1 == Vector3D(x: 3.0, y: 3.0, z: 3.0))
     }
 }
