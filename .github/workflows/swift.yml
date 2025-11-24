@@ -17,3 +17,8 @@ jobs:
       run: swift build
     - name: Run tests
       run: swift test --enable-code-coverage
+    
+    - uses: codecov/codecov-action@v5
+    - name: Upload coverage reports to Codecov
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
