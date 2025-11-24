@@ -21,4 +21,27 @@ public protocol Primitive3D : Codable, Equatable {
 
     /// A primitive with zero values.
     static var zero: Self { get }
+
+    // MARK: - Transforming primitives
+
+    /// Applies an affine transform.
+    /// 
+    /// - Parameter transform: The affine transform to apply.
+    mutating func apply(_ transform: AffineTransform3D)
+
+    /// Returns a new primitive created by applying an affine transform.
+    /// 
+    /// - Parameter transform: The affine transform to apply.
+    /// - Returns: A new transformed primitive.
+    func applying(_ transform: AffineTransform3D) -> Self
+}
+
+extension Primitive3D {
+
+    /// Applies an affine transform.
+    /// 
+    /// - Parameter transform: The affine transform to apply.
+    public mutating func apply(_ transform: AffineTransform3D) {
+        self = applying(transform)
+    }
 }

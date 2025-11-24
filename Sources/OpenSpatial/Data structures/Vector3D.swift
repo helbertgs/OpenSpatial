@@ -283,4 +283,18 @@ extension Vector3D : Primitive3D {
     public static var infinity: Vector3D {
         .init(x: .infinity, y: .infinity, z: .infinity)
     }
+
+    // MARK: - Transforming primitives
+
+    /// Applies an affine transform.
+    /// 
+    /// - Parameter transform: The affine transform to apply.
+    /// - Returns: A new transformed vector.
+    /// - Complexity: O(1)
+    public func applying(_ transform: AffineTransform3D) -> Vector3D {
+        let newX = x * transform.matrix[0][0] + y * transform.matrix[1][0] + z * transform.matrix[2][0] + transform.matrix[3][0]
+        let newY = x * transform.matrix[0][1] + y * transform.matrix[1][1] + z * transform.matrix[2][1] + transform.matrix[3][1]
+        let newZ = x * transform.matrix[0][2] + y * transform.matrix[1][2] + z * transform.matrix[2][2] + transform.matrix[3][2]
+        return Vector3D(x: newX, y: newY, z: newZ)
+    }
 }

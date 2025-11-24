@@ -208,4 +208,24 @@ struct Vector3DTests {
         #expect(infinityVector.y == Double.infinity)
         #expect(infinityVector.z == Double.infinity)
     }
+
+    @Test func testNaNVector() {
+        let nanVector = Vector3D(x: Double.nan, y: Double.nan, z: Double.nan)
+        #expect(nanVector.x.isNaN)
+        #expect(nanVector.y.isNaN)
+        #expect(nanVector.z.isNaN)
+    }
+
+    @Test func testApplyingAffineTransform() {
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let transform = AffineTransform3D(matrix: [
+            [10.0, 0.0, 0.0, 0.0],
+            [0.0, 20.0, 0.0, 0.0],
+            [0.0, 0.0, 30.0, 0.0],
+            [0.0, 0.0, 0.0,  1.0]
+        ])
+        
+        let transformedVector = vector.applying(transform)
+        #expect(transformedVector == Vector3D(x: 10.0, y: 40.0, z: 90.0))
+    }
 }
