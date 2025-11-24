@@ -89,11 +89,55 @@ struct Vector3DTests {
         #expect(reflectedVector == Vector3D(x: 1.0, y: 1.0, z: 0.0))
     }
 
+    // MARK: - Type properties
+
+    @Test func testBackwardVector() {
+        let backward = Vector3D.backward
+        #expect(backward == Vector3D(x: 0.0, y: 0.0, z: -1.0))
+    }
+
+    @Test func testForwardVector() {
+        let forward = Vector3D.forward
+        #expect(forward == Vector3D(x: 0.0, y: 0.0, z: 1.0))
+    }
+
+    @Test func testLeftVector() {
+        let left = Vector3D.left
+        #expect(left == Vector3D(x: -1.0, y: 0.0, z: 0.0))
+    }
+
+    @Test func testRightVector() {
+        let right = Vector3D.right
+        #expect(right == Vector3D(x: 1.0, y: 0.0, z: 0.0))
+    }
+
+    @Test func testUpVector() {
+        let up = Vector3D.up
+        #expect(up == Vector3D(x: 0.0, y: 1.0, z: 0.0))
+    }
+
+    @Test func testDownVector() {
+        let down = Vector3D.down
+        #expect(down == Vector3D(x: 0.0, y: -1.0, z: 0.0))
+    }
+
     // MARK: - AdditiveArithmetic tests
 
     @Test func testZeroVector() {
         let zeroVector = Vector3D.zero
         #expect(zeroVector == Vector3D(x: 0.0, y: 0.0, z: 0.0))
+    }
+
+    @Test func testMultiplication() async throws {
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let scaledVector = vector * 3.0
+        #expect(scaledVector == Vector3D(x: 3.0, y: 6.0, z: 9.0))
+    }
+
+    @Test func testMultiplication2() {
+        var vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        vector *= 3.0
+        #expect(vector == Vector3D(x: 3.0, y: 6.0, z: 9.0))
     }
 
     @Test func testAddition() {
@@ -122,5 +166,46 @@ struct Vector3DTests {
         let vector2 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
         vector1 -= vector2
         #expect(vector1 == Vector3D(x: 3.0, y: 3.0, z: 3.0))
+    }
+
+    @Test func testDivision() {
+        let vector = Vector3D(x: 4.0, y: 8.0, z: 12.0)
+        let dividedVector = vector / 4.0
+        #expect(dividedVector == Vector3D(x: 1.0, y: 2.0, z: 3.0))
+    }
+
+    @Test func testDivision2() {
+        var vector = Vector3D(x: 4.0, y: 8.0, z: 12.0)
+        vector /= 4.0
+        #expect(vector == Vector3D(x: 1.0, y: 2.0, z: 3.0))
+    }
+
+    // MARK: - Primitive3D tests
+
+    @Test func testIsFinite() {
+        let vector = Vector3D.zero
+        #expect(vector.isFinite == true)
+    }
+
+    @Test func testIsNotFinite() {
+        let vector = Vector3D.infinity
+        #expect(vector.isFinite == false)
+    }
+
+    @Test func testIsNaN() {
+        let vector = Vector3D(x: Double.nan, y: 0.0, z: 0.0)
+        #expect(vector.isNaN == true)
+    }
+
+    @Test func testIsZero() {
+        let vector = Vector3D(x: 0.0, y: 0.0, z: 0.0)
+        #expect(vector.isZero == true)
+    }
+
+    @Test func testInfinityVector() {
+        let infinityVector = Vector3D.infinity
+        #expect(infinityVector.x == Double.infinity)
+        #expect(infinityVector.y == Double.infinity)
+        #expect(infinityVector.z == Double.infinity)
     }
 }
