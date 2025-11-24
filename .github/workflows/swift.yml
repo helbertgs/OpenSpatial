@@ -31,7 +31,7 @@ jobs:
           --build-path .build-test-debug
         xcrun llvm-cov show \
           -instr-profile=.build-test-debug/debug/codecov/default.profdata \
-          .build-test-debug/debug/OpenSpatialTests.xctest/Contents/MacOS/OpenSpatialPackageTests \
+          .build-test-debug/debug/OpenSpatialPackageTests.xctest/Contents/MacOS/OpenSpatialPackageTests \
           > coverage.txt
     
     - name: Upload coverage reports to Codecov
