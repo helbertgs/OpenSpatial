@@ -49,6 +49,46 @@ struct Vector3DTests {
         #expect(crossProduct == Vector3D(x: -3.0, y: 6.0, z: -3.0)) // Cross product result
     }
 
+    @Test func testLength() {
+        let vector = Vector3D(x: 3.0, y: 4.0, z: 0.0)
+        #expect(vector.length == 5.0) // sqrt(3^2 + 4^2 + 0^2) = 5
+    }
+
+    @Test func testLengthSquared() {
+        let vector = Vector3D(x: 3.0, y: 4.0, z: 0.0)
+        #expect(vector.lengthSquared == 25.0) // 3^2 + 4^2 + 0^2 = 25
+    }
+
+    @Test func testNormalization() {
+        var vector = Vector3D(x: 3.0, y: 4.0, z: 0.0)
+        vector.normalize()
+        #expect(vector.x.rounded(toPlaces: 2) == 0.6) // 3/5
+        #expect(vector.y.rounded(toPlaces: 2) == 0.8) // 4/5
+        #expect(vector.z.rounded(toPlaces: 2) == 0.0)
+    }
+
+    @Test func testNormalizedVector() {
+        let vector = Vector3D(x: 3.0, y: 4.0, z: 0.0)
+        let normalizedVector = vector.normalized
+        #expect(normalizedVector.x.rounded(toPlaces: 2) == 0.6) // 3/5
+        #expect(normalizedVector.y.rounded(toPlaces: 2) == 0.8) // 4/5
+        #expect(normalizedVector.z.rounded(toPlaces: 2) == 0.0)
+    }
+
+    @Test func testProjectedVector() {
+        let vector = Vector3D(x: 3.0, y: 4.0, z: 0.0)
+        let ontoVector = Vector3D(x: 1.0, y: 0.0, z: 0.0)
+        let projectedVector = vector.projected(ontoVector)
+        #expect(projectedVector == Vector3D(x: 3.0, y: 0.0, z: 0.0))
+    }
+
+    @Test func testReflectedVector() {
+        let vector = Vector3D(x: 1.0, y: -1.0, z: 0.0)
+        let normal = Vector3D(x: 0.0, y: 1.0, z: 0.0)
+        let reflectedVector = vector.reflected(normal)
+        #expect(reflectedVector == Vector3D(x: 1.0, y: 1.0, z: 0.0))
+    }
+
     // MARK: - AdditiveArithmetic tests
 
     @Test func testZeroVector() {

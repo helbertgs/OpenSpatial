@@ -50,6 +50,7 @@ import Foundation
     /// 
     /// - Parameter other: The second vector.
     /// - Returns: The cross product vector.
+    /// - Complexity: O(1)
     @inline(__always)
     public func cross(_ other: Vector3D) -> Vector3D {
         .init(
@@ -63,9 +64,66 @@ import Foundation
     /// 
     /// - Parameter other: The second vector.
     /// - Returns: The dot product value.
+    /// - Complexity: O(1)
     @inline(__always)
     public func dot(_ other: Vector3D) -> Double {
-        x * other.x + y * other.y + z * other.z}
+        x * other.x + y * other.y + z * other.z
+    }
+
+    /// The length (magnitude) of the vector.
+    public var length: Double {
+        sqrt(x * x + y * y + z * z)
+    }
+
+    /// The squared length of the vector.
+    public var lengthSquared: Double {
+        x * x + y * y + z * z
+    }
+
+    /// Normalizes the mutable vector.
+    /// 
+    /// - Complexity: O(1)
+    @inline(__always)
+    public mutating func normalize() {
+        let len = length
+        guard len != 0 else { return }
+        self = Vector3D(x: x / len, y: y / len, z: z / len)
+    }
+
+    /// A new vector that represents the normalized copy of the current vector.
+    public var normalized: Vector3D {
+        var vector = self
+        vector.normalize()
+        return vector
+    }
+
+    /// Returns the vector projected onto the specified vector.
+    /// 
+    /// - Parameter other: The second vector.
+    /// - Returns: The projected vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func projected(_ other: Vector3D) -> Vector3D {
+        let otherLengthSquared = other.lengthSquared
+        guard otherLengthSquared != 0 else { return .zero }
+        let scalar = dot(other) / otherLengthSquared
+        return Vector3D(x: other.x * scalar, y: other.y * scalar, z: other.z * scalar)
+    }
+
+    /// Returns the reflection direction of the incident vector and a specified unit normal vector.
+    /// 
+    /// - Parameter normal: The unit normal vector.
+    /// - Returns: The reflected vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func reflected(_ normal: Vector3D) -> Vector3D {
+        let dotProduct = self.dot(normal)
+        return Vector3D(
+            x: self.x - 2 * dotProduct * normal.x,
+            y: self.y - 2 * dotProduct * normal.y,
+            z: self.z - 2 * dotProduct * normal.z
+        )
+    }
 }
 
 extension Vector3D : ExpressibleByArrayLiteral {
@@ -91,6 +149,7 @@ extension Vector3D : AdditiveArithmetic {
     ///   - lhs: The first vector.
     ///   - rhs: The second vector.
     /// - Returns: The sum of the two vectors.
+    /// - Complexity: O(1)
     @inline(__always)
     public static func + (lhs: Vector3D, rhs: Vector3D) -> Vector3D {
         .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
@@ -101,6 +160,7 @@ extension Vector3D : AdditiveArithmetic {
     /// - Parameters:
     ///   - lhs: The first vector.
     ///   - rhs: The second vector.
+    /// - Complexity: O(1)
     @inline(__always)
     public static func += (lhs: inout Vector3D, rhs: Vector3D) {
         lhs = lhs + rhs
@@ -112,6 +172,7 @@ extension Vector3D : AdditiveArithmetic {
     ///   - lhs: The first vector.
     ///   - rhs: The second vector.
     /// - Returns: The difference of the two vectors.
+    /// - Complexity: O(1)
     @inline(__always)
     public static func - (lhs: Vector3D, rhs: Vector3D) -> Vector3D {
         .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
@@ -122,6 +183,7 @@ extension Vector3D : AdditiveArithmetic {
     /// - Parameters:
     ///   - lhs: The first vector.
     ///   - rhs: The second vector.
+    /// - Complexity: O(1)
     @inline(__always)
     public static func -= (lhs: inout Vector3D, rhs: Vector3D) {
         lhs = lhs - rhs
