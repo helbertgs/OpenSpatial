@@ -59,6 +59,7 @@ extension Volumetric {
     /// 
     /// - Parameter points: The array of points that the function compares against.
     /// - Returns: A Boolean value that indicates whether this volume contains any of the specified points
+    @inline(__always)
     public func contains(anyOf points: [Point3D]) -> Bool {
         for point in points {
             if contains(point: point) {
@@ -67,5 +68,23 @@ extension Volumetric {
         }
 
         return false
+    }
+
+    /// Sets the primitive to the intersection of itself and the specified primitive.
+    /// 
+    /// - Parameter other: The primitive to intersect with.
+    @inline(__always)
+    public mutating func formIntersection(_ other: Self) {
+        if let intersection = intersection(other) {
+            self = intersection
+        }
+    }
+
+    /// Sets the primitive to the union of itself and the specified primitive.
+    /// 
+    /// - Parameter other: The primitive to union with.
+    @inline(__always)
+    public mutating func formUnion(_ other: Self) {
+        self = union(other)
     }
 }

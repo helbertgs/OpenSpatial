@@ -80,25 +80,6 @@ import Foundation
 
     /// The size structure with width, height, and depth values of one.
     public static let one = Size3D(width: 1, height: 1, depth: 1)
-
-    // MARK: - Creating derived 3D sizes
-
-    /// Returns the intersection of two sizes.
-    /// 
-    /// - Parameter other: The size that the function compares against.
-    /// - Returns: A new size that is the intersection of two sizes.
-    @inline(__always)
-    public func intersection(_ other: Size3D) -> Size3D? {
-        let newWidth = min(self.width, other.width)
-        let newHeight = min(self.height, other.height)
-        let newDepth = min(self.depth, other.depth)
-
-        if newWidth >= 0 && newHeight >= 0 && newDepth >= 0 {
-            return Size3D(width: newWidth, height: newHeight, depth: newDepth)
-        } else {
-            return nil
-        }
-    }
 }
 
 extension Size3D : ExpressibleByArrayLiteral {
@@ -274,6 +255,73 @@ extension Size3D : Scalable3D {
         .init(width: self.width * scale,
               height: self.height * scale,
               depth: self.depth * scale)
+    }
+}
+
+extension Size3D : Volumetric {
+
+    // MARK: - Instance methods
+
+    /// The size of the volume.
+    @inline(__always)
+    public var size: Size3D { 
+        self
+    }
+
+    // MARK: - Checking Characteristics
+
+    /// Returns a Boolean value that indicates whether the entity contains the specified volumetric entity.
+    /// 
+    /// - Parameter other: The volumetric entity that the function compares against.
+    /// - Returns: A Boolean value that indicates whether the entity contains the specified volumetric entity
+    @inline(__always)
+    public func contains(_ other: Size3D) -> Bool {
+        other.width <= width &&
+        other.height <= height &&
+        other.depth <= depth
+    }
+
+    /// Returns a Boolean value that indicates whether this volume contains the specified point.
+    ///
+    /// - Parameter point: The point that the function compares against.
+    /// - Returns: A Boolean value that indicates whether this volume contains the specified point.
+    @inline(__always)
+    public func contains(point: Point3D) -> Bool {
+        point.x >= 0 && point.x <= width &&
+        point.y >= 0 && point.y <= height &&
+        point.z >= 0 && point.z <= depth
+    }
+
+    // MARK: - Creating derived 3D sizes
+
+    /// Returns the intersection of two sizes.
+    /// 
+    /// - Parameter other: The size that the function compares against.
+    /// - Returns: A new size that is the intersection of two sizes.
+    @inline(__always)
+    public func intersection(_ other: Size3D) -> Size3D? {
+        let newWidth = min(self.width, other.width)
+        let newHeight = min(self.height, other.height)
+        let newDepth = min(self.depth, other.depth)
+
+        if newWidth >= 0 && newHeight >= 0 && newDepth >= 0 {
+            return Size3D(width: newWidth, height: newHeight, depth: newDepth)
+        } else {
+            return nil
+        }
+    }
+
+    /// Returns the union of this primitive and the specified primitive.
+    /// 
+    /// - Parameter other: The primitive to union with.
+    /// - Returns: The union of this primitive and the specified primitive.
+    @inline(__always)
+    public func union(_ other: Size3D) -> Size3D {
+        let newWidth = max(self.width, other.width)
+        let newHeight = max(self.height, other.height)
+        let newDepth = max(self.depth, other.depth)
+
+        return Size3D(width: newWidth, height: newHeight, depth: newDepth)
     }
 }
 

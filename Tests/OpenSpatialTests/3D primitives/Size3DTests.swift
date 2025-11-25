@@ -163,11 +163,11 @@ struct Size3DTests {
         #expect(size.isNaN == true)
     }
 
-    @Test func testInfinityVector() {
-        let infinitySize = Size3D.infinity
-        #expect(infinitySize.width == Double.infinity)
-        #expect(infinitySize.height == Double.infinity)
-        #expect(infinitySize.depth == Double.infinity)
+    @Test func testInfinity() {
+        let infinity = Size3D.infinity
+        #expect(infinity.width == Double.infinity)
+        #expect(infinity.height == Double.infinity)
+        #expect(infinity.depth == Double.infinity)
     }
 
     // MARK: - Scalable3D tests
@@ -186,5 +186,74 @@ struct Size3DTests {
         #expect(uniformScaledSize.width == 4.0)
         #expect(uniformScaledSize.height == 6.0)
         #expect(uniformScaledSize.depth == 8.0)
+    }
+
+    // MARK: - Volumetric3D tests
+
+    @Test func testContains() {
+        let size1 = Size3D(width: 5.0, height: 5.0, depth: 5.0)
+        let size2 = Size3D(width: 3.0, height: 3.0, depth: 3.0)
+        #expect(size1.contains(size2) == true)
+    }
+
+    @Test func testContainsPoint() {
+        let size = Size3D(width: 5.0, height: 5.0, depth: 5.0)
+        let point = Point3D(x: 2.0, y: 2.0, z: 2.0)
+        #expect(size.contains(point: point) == true)
+    }
+
+    @Test func testIntersectionWithNoOverlap() {
+        let size1 = Size3D(width: 2.0, height: 2.0, depth: 2.0)
+        let size2 = Size3D(width: 2.0, height: 2.0, depth: 2.0)
+        
+        let intersectionSize = size1.intersection(size2)
+        #expect(intersectionSize?.width == 2.0)
+        #expect(intersectionSize?.height == 2.0)
+        #expect(intersectionSize?.depth == 2.0)
+    }
+
+    @Test func testIntersectionWithPartialOverlap() {
+        let size1 = Size3D(width: 4.0, height: 4.0, depth: 4.0)
+        let size2 = Size3D(width: 3.0, height: 5.0, depth: 2.0)
+        
+        let intersectionSize = size1.intersection(size2)
+        #expect(intersectionSize?.width == 3.0)
+        #expect(intersectionSize?.height == 4.0)
+        #expect(intersectionSize?.depth == 2.0)
+    }
+
+    @Test func testIntersectionWithCompleteOverlap() {
+        let size1 = Size3D(width: 5.0, height: 5.0, depth: 5.0)
+        let size2 = Size3D(width: 5.0, height: 5.0, depth: 5.0)
+        
+        let intersectionSize = size1.intersection(size2)
+        #expect(intersectionSize?.width == 5.0)
+        #expect(intersectionSize?.height == 5.0)
+        #expect(intersectionSize?.depth == 5.0)
+    }
+
+    @Test func testIntersectionWithEdgeTouching() {
+        let size1 = Size3D(width: 3.0, height: 3.0, depth: 3.0)
+        let size2 = Size3D(width: 3.0, height: 3.0, depth: 3.0)
+        
+        let intersectionSize = size1.intersection(size2)
+        #expect(intersectionSize?.width == 3.0)
+        #expect(intersectionSize?.height == 3.0)
+        #expect(intersectionSize?.depth == 3.0)
+    }
+
+    @Test func testUnion() {
+        let size1 = Size3D(width: 2.0, height: 3.0, depth: 4.0)
+        let size2 = Size3D(width: 5.0, height: 6.0, depth: 7.0)
+        
+        let unionSize = size1.union(size2)
+        #expect(unionSize.width == 5.0)
+        #expect(unionSize.height == 6.0)
+        #expect(unionSize.depth == 7.0)
+    }
+
+    @Test func testDescription() {
+        let size = Size3D(width: 1.0, height: 2.0, depth: 3.0)
+        #expect(size.description == "(width: 1.0, height: 2.0, depth: 3.0)")
     }
 }
