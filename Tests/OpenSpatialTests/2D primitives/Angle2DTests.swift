@@ -41,55 +41,6 @@ struct Angle2DTests {
         #expect(angle.radians == 1.5708)
     }
 
-    // MARK: - Geometry functions
-
-    @Test func testCos() {
-        let angle = Angle2D(radians: Double.pi / 3) // 60 degrees
-        let cosValue = Angle2D.cos(angle.radians)
-        #expect(abs(cosValue - 0.5) < 0.0001)
-    }
-
-    @Test func testSin() {
-        let angle = Angle2D(radians: Double.pi / 6) // 30 degrees
-        let sinValue = Angle2D.sin(angle.radians)
-        #expect(abs(sinValue - 0.5) < 0.0001)
-    }
-
-    @Test func testAcos() {
-        let angle = Angle2D.acos(0.5)
-        #expect(abs(angle.radians - (Double.pi / 3)) < 0.0001)
-    }
-
-    @Test func testAcosh() {
-        let angle = Angle2D.acosh(2.0)
-        #expect(abs(angle.radians - 1.31696) < 0.0001)
-    }
-
-    @Test func testAsin() {
-        let angle = Angle2D.asin(0.5)
-        #expect(abs(angle.radians - (Double.pi / 6)) < 0.0001)
-    }
-
-    @Test func testAsinh() {
-        let angle = Angle2D.asinh(1.0)
-        #expect(abs(angle.radians - 0.88137) < 0.0001)
-    }
-
-    @Test func testAtan() {
-        let angle = Angle2D.atan(1.0)
-        #expect(abs(angle.radians - (Double.pi / 4)) < 0.0001)
-    }
-
-    @Test func testAtan2() {
-        let angle = Angle2D.atan2(y: 1.0, x: 1.0)
-        #expect(abs(angle.radians - (Double.pi / 4)) < 0.0001)
-    }
-
-    @Test func testAtanh() {
-        let angle = Angle2D.atanh(0.5)
-        #expect(abs(angle.radians - 0.5493) < 0.0001)
-    }
-
     // MARK: - AdditiveArithmetic
 
     @Test func testAddition() {

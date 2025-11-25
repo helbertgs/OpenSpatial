@@ -224,6 +224,4 @@ struct Point3DTests {
         point.uniformlyScale(by: 3.0)
         #expect(point == Point3D(x: 3.0, y: 6.0, z: 9.0))
     }
-
-
 }
