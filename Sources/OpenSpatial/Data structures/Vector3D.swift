@@ -218,6 +218,54 @@ extension Vector3D : AdditiveArithmetic {
         .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
     }
 
+    /// Adds a vector to a size and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The size.
+    /// - Returns: The sum of the vector and the size.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Vector3D, rhs: Size3D) -> Size3D {
+        .init(width: lhs.x + rhs.width, height: lhs.y + rhs.height, depth: lhs.z + rhs.depth)
+    }
+
+    /// Adds a size to a vector and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The size.
+    ///   - rhs: The vector.
+    /// - Returns: The sum of the vector and the size.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Size3D, rhs: Vector3D) -> Size3D {
+        .init(width: lhs.width + rhs.x, height: lhs.height + rhs.y, depth: lhs.depth + rhs.z)
+    }
+
+    /// Adds a vector to a point and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The point.
+    ///   - rhs: The vector.
+    /// - Returns: The sum of the point and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Point3D, rhs: Vector3D) -> Point3D {
+        .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
+    }
+
+    /// Adds a vector to a point and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The point.
+    /// - Returns: The sum of the point and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Vector3D, rhs: Point3D) -> Point3D {
+        .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
+    }
+
     /// Adds the second vector to the first vector and stores the result in the first vector.
     /// 
     /// - Parameters:
@@ -250,6 +298,54 @@ extension Vector3D : AdditiveArithmetic {
     @inline(__always)
     public static func -= (lhs: inout Vector3D, rhs: Vector3D) {
         lhs = lhs - rhs
+    }
+
+    /// Subtracts a vector from a size and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The size.
+    /// - Returns: The difference of the vector and the size.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Vector3D, rhs: Size3D) -> Size3D {
+        .init(width: lhs.x - rhs.width, height: lhs.y - rhs.height, depth: lhs.z - rhs.depth)
+    }
+
+    /// Subtracts a size from a vector and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The size.
+    ///   - rhs: The vector.
+    /// - Returns: The difference of the size and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Size3D, rhs: Vector3D) -> Size3D {
+        .init(width: lhs.width - rhs.x, height: lhs.height - rhs.y, depth: lhs.depth - rhs.z)
+    }
+
+    /// Subtracts a vector from a point and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The point.
+    ///   - rhs: The vector.
+    /// - Returns: The difference of the point and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Point3D, rhs: Vector3D) -> Point3D {
+        .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
+    }
+
+    /// Subtracts a point from a vector and returns the result.
+    /// 
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The point.
+    /// - Returns: The difference of the vector and the point.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func -(lhs: Vector3D, rhs: Point3D) -> Point3D {
+        .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
     }
 
     /// Returns a vector with each element divided by a scalar value.

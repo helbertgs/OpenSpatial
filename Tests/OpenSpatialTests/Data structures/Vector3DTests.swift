@@ -202,18 +202,18 @@ struct Vector3DTests {
         #expect(vector.isZero == true)
     }
 
-    @Test func testInfinityVector() {
-        let infinityVector = Vector3D.infinity
-        #expect(infinityVector.x == Double.infinity)
-        #expect(infinityVector.y == Double.infinity)
-        #expect(infinityVector.z == Double.infinity)
+    @Test func testInfinity() {
+        let infinity = Vector3D.infinity
+        #expect(infinity.x == Double.infinity)
+        #expect(infinity.y == Double.infinity)
+        #expect(infinity.z == Double.infinity)
     }
 
-    @Test func testNaNVector() {
-        let nanVector = Vector3D(x: Double.nan, y: Double.nan, z: Double.nan)
-        #expect(nanVector.x.isNaN)
-        #expect(nanVector.y.isNaN)
-        #expect(nanVector.z.isNaN)
+    @Test func testNaN() {
+        let vector = Vector3D(x: Double.nan, y: Double.nan, z: Double.nan)
+        #expect(vector.x.isNaN)
+        #expect(vector.y.isNaN)
+        #expect(vector.z.isNaN)
     }
 
     @Test func testApplyingAffineTransform() {
@@ -225,8 +225,8 @@ struct Vector3DTests {
             [0.0, 0.0, 0.0,  1.0]
         ])
         
-        let transformedVector = vector.applying(transform)
-        #expect(transformedVector == Vector3D(x: 10.0, y: 40.0, z: 90.0))
+        let transformed = vector.applying(transform)
+        #expect(transformed == Vector3D(x: 10.0, y: 40.0, z: 90.0))
     }
 
     // MARK: - Scalable3D tests
