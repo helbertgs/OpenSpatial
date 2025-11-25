@@ -44,6 +44,24 @@ import Foundation
     /// The z-element value.
     public let z: Double
 
+    /// Accesses the x, y, or z value at the specified index.
+    /// 
+    /// - Parameter index: The index of the value to access. Valid indices are 0, 1, and 2.
+    /// - Returns: The x, y, or z value at the specified index.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public subscript(index: Int) -> Double {
+        get {
+            switch index {
+            case 0: return x
+            case 1: return y
+            case 2: return z
+            default:
+                fatalError("Index out of range. Valid indices are 0, 1, and 2.")
+            }
+        }
+    }
+
     // MARK: - Geometry functions
 
     /// Returns the cross product of the vector and the specified vector.
