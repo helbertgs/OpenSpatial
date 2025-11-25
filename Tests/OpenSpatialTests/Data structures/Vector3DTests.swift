@@ -228,4 +228,18 @@ struct Vector3DTests {
         let transformedVector = vector.applying(transform)
         #expect(transformedVector == Vector3D(x: 10.0, y: 40.0, z: 90.0))
     }
+
+    // MARK: - Scalable3D tests
+
+    @Test func testScalingVector3D() {
+        var vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        vector.scaleBy(x: 2.0, y: 3.0, z: 4.0)
+        #expect(vector == Vector3D(x: 2.0, y: 6.0, z: 12.0))
+    }
+
+    @Test func testUniformScalingVector3D() {
+        var vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        vector.uniformlyScale(by: 3.0)
+        #expect(vector == Vector3D(x: 3.0, y: 6.0, z: 9.0))
+    }
 }

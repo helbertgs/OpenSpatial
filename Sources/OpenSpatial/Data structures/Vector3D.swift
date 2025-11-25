@@ -316,3 +316,28 @@ extension Vector3D : Primitive3D {
         return Vector3D(x: newX, y: newY, z: newZ)
     }
 }
+
+extension Vector3D : Scalable3D {
+
+    // MARK: - Instance methods
+
+    /// Returns a new entity scaled by the specified size.
+    /// 
+    /// - Parameter size: A size that contains the scale factors for each axis.
+    /// - Returns: A new scaled entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func scaled(by size: Size3D) -> Vector3D {
+        .init(x: x * size.width, y: y * size.height, z: z * size.depth)
+    }
+
+    /// Returns a new entity scaled uniformly by the specified factor.
+    /// 
+    /// - Parameter scale: A double-precision value that specifies the uniform scale factor.
+    /// - Returns: A new scaled entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func uniformlyScaled(by scale: Double) -> Vector3D {
+        .init(x: x * scale, y: y * scale, z: z * scale)
+    }
+}

@@ -169,4 +169,22 @@ struct Size3DTests {
         #expect(infinitySize.height == Double.infinity)
         #expect(infinitySize.depth == Double.infinity)
     }
+
+    // MARK: - Scalable3D tests
+
+    @Test func testScaledBy() {
+        let size = Size3D(width: 2.0, height: 3.0, depth: 4.0)
+        let scaledSize = size.scaled(by: .init(width: 3, height: 3, depth: 3))
+        #expect(scaledSize.width == 6.0)
+        #expect(scaledSize.height == 9.0)
+        #expect(scaledSize.depth == 12.0)
+    }
+
+    @Test func testUniformScale() {
+        let size = Size3D(width: 2.0, height: 3.0, depth: 4.0)
+        let uniformScaledSize = size.uniformlyScaled(by: 2.0)
+        #expect(uniformScaledSize.width == 4.0)
+        #expect(uniformScaledSize.height == 6.0)
+        #expect(uniformScaledSize.depth == 8.0)
+    }
 }

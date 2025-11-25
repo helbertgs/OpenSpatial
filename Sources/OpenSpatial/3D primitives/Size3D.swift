@@ -249,3 +249,30 @@ extension Size3D : Primitive3D {
         fatalError("Size3D does not support applying affine transforms.")
     }
 }
+
+extension Size3D : Scalable3D {
+
+    /// Returns a new entity scaled by the specified size.
+    /// 
+    /// - Parameter size: A size that contains the scale factors for each axis.
+    /// - Returns: A new scaled entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func scaled(by size: Size3D) -> Size3D {
+        .init(width: self.width * size.width,
+              height: self.height * size.height,
+              depth: self.depth * size.depth)
+    }
+
+    /// Returns a new entity scaled uniformly by the specified factor.
+    /// 
+    /// - Parameter scale: A double-precision value that specifies the uniform scale factor.
+    /// - Returns: A new scaled entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func uniformlyScaled(by scale: Double) -> Size3D {
+        .init(width: self.width * scale,
+              height: self.height * scale,
+              depth: self.depth * scale)
+    }
+}

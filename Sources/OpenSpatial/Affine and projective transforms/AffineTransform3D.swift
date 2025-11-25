@@ -91,3 +91,32 @@ extension AffineTransform3D {
         lhs = lhs * rhs
     }
 }
+
+extension AffineTransform3D : Scalable3D {
+
+    // MARK: - Scaling transforms
+
+    /// Returns a new affine transform scaled by the specified size.
+    /// 
+    /// - Parameter size: A size that contains the scale factors for each axis.
+    /// - Returns: A new scaled affine transform.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func scaled(by size: Size3D) -> AffineTransform3D {
+        var scaleTransform = AffineTransform3D()
+        scaleTransform[0, 0] = size.width
+        scaleTransform[1, 1] = size.height
+        scaleTransform[2, 2] = size.depth
+        return self * scaleTransform
+    }
+
+    /// Returns a new entity scaled uniformly by the specified factor.
+    /// 
+    /// - Parameter scale: A double-precision value that specifies the uniform scale factor.
+    /// - Returns: A new scaled entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func uniformlyScaled(by scale: Double) -> AffineTransform3D {
+        self.scaled(by: Size3D(width: scale, height: scale, depth: scale))
+    }
+}
