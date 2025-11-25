@@ -224,4 +224,13 @@ struct Point3DTests {
         point.uniformlyScale(by: 3.0)
         #expect(point == Point3D(x: 3.0, y: 6.0, z: 9.0))
     }
+
+    // MARK: - Translatable3D tests
+
+    @Test func testTranslatingPoint3D() {
+        var point = Point3D(x: 1.0, y: 2.0, z: 3.0)
+        let vector = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        point = point.translated(by: vector)
+        #expect(point == Point3D(x: 5.0, y: 7.0, z: 9.0))
+    }
 }

@@ -41,6 +41,7 @@ extension Scalable3D {
     /// Scales the entity by the specified size.
     /// 
     /// - Parameter size: A size that contains the scale factors for each axis.
+    @inline(__always)
     public mutating func scale(by size: Size3D) {
         self = self.scaled(by: size)
     }
@@ -51,6 +52,7 @@ extension Scalable3D {
     ///   - x: A double-precision value that specifies the scale factor for the x-axis.
     ///   - y: A double-precision value that specifies the scale factor for the y-axis.
     ///   - z: A double-precision value that specifies the scale factor for the z-axis.
+    @inline(__always)
     public mutating func scaleBy(x: Double, y: Double, z: Double) {
         self.scale(by: Size3D(width: x, height: y, depth: z))
     }
@@ -58,6 +60,7 @@ extension Scalable3D {
     /// Scales the entity uniformly by the specified factor.
     /// 
     /// - Parameter scale: A double-precision value that specifies the uniform scale factor.
+    @inline(__always)
     public mutating func uniformlyScale(by scale: Double) {
         self.scale(by: Size3D(width: scale, height: scale, depth: scale))
     }

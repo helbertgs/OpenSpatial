@@ -412,3 +412,18 @@ extension Point3D : Scalable3D {
         .init(x: x * scale, y: y * scale, z: z * scale)
     }
 }
+
+extension Point3D : Translatable3D {
+
+    // MARK: - Instance methods
+
+    /// Returns a new entity translated by the specified vector.
+    /// 
+    /// - Parameter vector: A vector that contains the translation distances for each axis.
+    /// - Returns: A new translated entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func translated(by vector: Vector3D) -> Point3D {
+        self + vector
+    }
+}

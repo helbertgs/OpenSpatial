@@ -77,4 +77,19 @@ struct AffineTransform3DTests {
         ]
         #expect(transform.matrix == expectedMatrix)
     }
+
+    // MARK: - Translatable3D tests
+
+    @Test func testTranslatingAffineTransform3D() {
+        var transform = AffineTransform3D()
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        transform = transform.translated(by: vector)
+        let expectedMatrix: [[Double]] = [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [1.0, 2.0, 3.0, 1.0]
+        ]
+        #expect(transform.matrix == expectedMatrix)
+    }
 }

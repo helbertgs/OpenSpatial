@@ -120,3 +120,22 @@ extension AffineTransform3D : Scalable3D {
         self.scaled(by: Size3D(width: scale, height: scale, depth: scale))
     }
 }
+
+extension AffineTransform3D : Translatable3D {
+
+    // MARK: - Translating transforms
+
+    /// Returns a new affine transform translated by the specified vector.
+    /// 
+    /// - Parameter vector: A vector that contains the translation distances for each axis.
+    /// - Returns: A new translated affine transform.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func translated(by vector: Vector3D) -> AffineTransform3D {
+        var translationTransform = AffineTransform3D()
+        translationTransform[3, 0] = vector.x
+        translationTransform[3, 1] = vector.y
+        translationTransform[3, 2] = vector.z
+        return self * translationTransform
+    }
+}
