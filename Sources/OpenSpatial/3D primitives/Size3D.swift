@@ -50,13 +50,13 @@ import Foundation
     // MARK: - Inspecting a 3D size’s properties
     
     /// The width value.
-    public let width: Double
+    public var width: Double
     
     /// The height value.
-    public let height: Double
+    public var height: Double
     
     /// The depth value.
-    public let depth: Double
+    public var depth: Double
 
     /// Accesses the width, height, or depth value at the specified index.
     /// 
@@ -274,5 +274,15 @@ extension Size3D : Scalable3D {
         .init(width: self.width * scale,
               height: self.height * scale,
               depth: self.depth * scale)
+    }
+}
+
+extension Size3D : CustomStringConvertible {
+
+    // MARK: - CustomStringConvertible
+
+    /// A textual representation of the size.
+    public var description: String {
+        "(width: \(width), height: \(height), depth: \(depth))"
     }
 }

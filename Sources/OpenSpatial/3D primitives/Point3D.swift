@@ -7,13 +7,13 @@ public struct Point3D : Copyable, Codable, Equatable, Hashable, Sendable {
     // MARK: - Inspecting a 3D point’s properties
     
     /// The x-coordinate of the point.
-    public let x: Double
+    public var x: Double
     
     /// The y-coordinate of the point.
-    public let y: Double
+    public var y: Double
     
     /// The z-coordinate of the point.
-    public let z: Double
+    public var z: Double
 
     /// The magnitude (length) of the point from the origin.
     public var magnitudeSquared: Double {
@@ -425,5 +425,15 @@ extension Point3D : Translatable3D {
     @inline(__always)
     public func translated(by vector: Vector3D) -> Point3D {
         self + vector
+    }
+}
+
+extension Point3D : CustomStringConvertible {
+
+    // MARK: - CustomStringConvertible
+
+    /// A textual representation of the point.
+    public var description: String {
+        "(x: \(x), y: \(y), z: \(z))"
     }
 }
