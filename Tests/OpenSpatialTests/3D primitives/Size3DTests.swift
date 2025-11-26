@@ -38,11 +38,18 @@ struct Size3DTests {
         #expect(size.depth == 6.0)
     }
 
-    @Test func testSubscriptAccess() {
+    @Test func testSubscriptAccess() throws {
         let size = Size3D(width: 7.0, height: 8.0, depth: 9.0)
-        #expect(size[0] == 7.0)
-        #expect(size[1] == 8.0)
-        #expect(size[2] == 9.0)
+        #expect(try size[0] == 7.0)
+        #expect(try size[1] == 8.0)
+        #expect(try size[2] == 9.0)
+    }
+
+    @Test func testSubscriptError() throws {
+        let size = Size3D(width: 7.0, height: 8.0, depth: 9.0)
+        #expect(throws: OpenSpatial.Error.self) {
+            try size[4] == 0
+        }
     }
 
     // MARK: - Creating derived 3D sizes
@@ -170,6 +177,13 @@ struct Size3DTests {
         #expect(infinity.depth == Double.infinity)
     }
 
+    @Test func testApplyingAffineTransform() {
+        let size1 = Size3D.one
+        let size2 = size1.applying(.init())
+
+        #expect(size2 == .one)
+    }
+
     // MARK: - Scalable3D tests
 
     @Test func testScaledBy() {
@@ -189,6 +203,11 @@ struct Size3DTests {
     }
 
     // MARK: - Volumetric3D tests
+
+    @Test func testSize() {
+        let size1 = Size3D(width: 5.0, height: 5.0, depth: 5.0)
+        #expect(size1.size == Size3D(width: 5.0, height: 5.0, depth: 5.0))
+    }
 
     @Test func testContains() {
         let size1 = Size3D(width: 5.0, height: 5.0, depth: 5.0)
@@ -240,6 +259,14 @@ struct Size3DTests {
         #expect(intersectionSize?.width == 3.0)
         #expect(intersectionSize?.height == 3.0)
         #expect(intersectionSize?.depth == 3.0)
+    }
+
+    @Test func testIntersectionNil() {
+        let size1 = Size3D(width: 3.0, height: 3.0, depth: 3.0)
+        let size2 = Size3D(width: -4.0, height: -8.0, depth: -2.0)
+        
+        let intersectionSize = size1.intersection(size2)
+        #expect(intersectionSize == nil)
     }
 
     @Test func testUnion() {

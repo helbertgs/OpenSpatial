@@ -33,6 +33,14 @@ import Foundation
         (self.x, self.y, self.z) = (Double(x), Double(y), Double(z))
     }
 
+    /// Creates a vector from the specified Spatial size structure.
+    /// 
+    /// - Parameter size: A size structure that specifies the elememnt values.
+    @inline(__always)
+    public init(_ size: Size3D) {
+        (x, y, z) = (size.width, size.height, size.depth)
+    }
+
     // MARK: - Inspecting a vector’s properties
 
     /// The x-element value.

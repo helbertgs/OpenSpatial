@@ -83,13 +83,13 @@ public struct Point3D : Copyable, Codable, Equatable, Hashable, Sendable {
     /// - Complexity: O(1)
     @inline(__always)
     public subscript(index: Int) -> Double {
-        get {
+        get throws {
             switch index {
             case 0: return x
             case 1: return y
             case 2: return z
             default:
-                fatalError("Index out of range. Valid indices are 0, 1, and 2.")
+                throw Error.outOfRage
             }
         }
     }

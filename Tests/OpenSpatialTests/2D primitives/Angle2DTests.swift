@@ -16,12 +16,12 @@ struct Angle2DTests {
     }
 
     @Test func testInitializationUsingRadiansFloatingPoint() {
-        let angle = Angle2D(radians: Double(Double.pi / 2))
-        #expect(angle.radians == Double.pi / 2)
+        let angle = Angle2D(radians: Float(Float.pi / 2))
+        #expect(angle.radians == Double(Float.pi / 2))
     }
 
     @Test func testInitializationUsingDegreesFloatingPoint() {
-        let angle = Angle2D(degrees: Double(180.0))
+        let angle = Angle2D(degrees: Float(180.0))
         #expect(angle.degrees == 180.0)
     }
 
@@ -41,7 +41,23 @@ struct Angle2DTests {
         #expect(angle.radians == 1.5708)
     }
 
+    @Test func testInitializationUsingStaticDegrees() {
+        let angle = Angle2D.degrees(90)
+        #expect(angle.radians == Double.pi / 2)
+    }
+
+     @Test func testInitializationUsingStaticRadians() {
+        let angle = Angle2D.radians(Double.pi / 2)
+        #expect(angle.degrees == 90)
+    }
+
     // MARK: - AdditiveArithmetic
+
+    @Test func testZero() {
+        let angle = Angle2D.zero
+        #expect(angle.degrees == 0)
+        #expect(angle.radians == 0)
+    }
 
     @Test func testAddition() {
         let angle1 = Angle2D(radians: Double.pi / 4)
@@ -50,11 +66,25 @@ struct Angle2DTests {
         #expect(result.radians == Double.pi / 2)
     }
 
+    @Test func testAddition2() {
+        var angle1 = Angle2D(radians: Double.pi / 4)
+        let angle2 = Angle2D(radians: Double.pi / 4)
+        angle1 += angle2
+        #expect(angle1.radians == Double.pi / 2)
+    }
+
     @Test func testSubtraction() {
         let angle1 = Angle2D(radians: Double.pi / 2)
         let angle2 = Angle2D(radians: Double.pi / 4)
         let result = angle1 - angle2
         #expect(result.radians == Double.pi / 4)
+    }
+
+    @Test func testSubtraction2() {
+        var angle1 = Angle2D(radians: Double.pi / 2)
+        let angle2 = Angle2D(radians: Double.pi / 4)
+        angle1 -= angle2
+        #expect(angle1.radians == Double.pi / 4)
     }
 
     // MARK: - Comparable

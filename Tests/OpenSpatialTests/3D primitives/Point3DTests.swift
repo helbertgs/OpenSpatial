@@ -33,13 +33,36 @@ struct Point3DTests {
         #expect(point.z == 3.0)
     }
 
+     @Test func testInitializationUsingSize3D() {
+        let size = Size3D(width: 3, height: 5, depth: 8)
+        let point = Point3D(size)
+        #expect(point.x == size.width)
+        #expect(point.y == size.height)
+        #expect(point.z == size.depth)
+    }
+
+    @Test func testInitializationUsingVector3D() {
+        let vector = Vector3D(x: 3, y: 5, z: 8)
+        let point = Point3D(vector)
+        #expect(point.x == vector.x)
+        #expect(point.y == vector.y)
+        #expect(point.z == vector.z)
+    }
+
     // MARK: - Subscripting tests
 
-    @Test func testSubscriptGetter() {
+    @Test func testSubscriptGetter() throws {
         let point = Point3D(x: 1.0, y: 2.0, z: 3.0)
-        #expect(point[0] == 1.0)
-        #expect(point[1] == 2.0)
-        #expect(point[2] == 3.0)
+        #expect(try point[0] == 1.0)
+        #expect(try point[1] == 2.0)
+        #expect(try point[2] == 3.0)
+    }
+
+    @Test func testSubscriptError() throws {
+        let point = Point3D.zero
+        #expect(throws: OpenSpatial.Error.self) {
+            try point[4] == 0
+        }
     }
 
     // MARK: - Inspecting a 3D point’s properties
@@ -103,6 +126,14 @@ struct Point3DTests {
         #expect(result == Point3D(x: 5.0, y: 7.0, z: 9.0))
     }
 
+    @Test func testAddingSize2() {
+        let point = Point3D(x: 1.0, y: 2.0, z: 3.0)
+        let size = Size3D(width: 4.0, height: 5.0, depth: 6.0)
+        let result = size + point
+        #expect(result == Point3D(x: 5.0, y: 7.0, z: 9.0))
+    }
+
+
     @Test func testSubtractingPoint() {
         let point1 = Point3D(x: 5.0, y: 7.0, z: 9.0)
         let point2 = Point3D(x: 4.0, y: 5.0, z: 6.0)
@@ -131,11 +162,25 @@ struct Point3DTests {
         #expect(result == Point3D(x: -1.0, y: -2.0, z: -3.0))
     }
 
+    @Test func testSubtractingSize3() {
+        var point = Point3D(x: 5.0, y: 7.0, z: 9.0)
+        let size = Size3D(width: 4.0, height: 5.0, depth: 6.0)
+        point -= size
+        #expect(point == Point3D(x: 1.0, y: 2.0, z: 3.0))
+    }
+
     @Test func testSubtractingVector() {
         let point = Point3D(x: 5.0, y: 7.0, z: 9.0)
         let vector = Vector3D(x: 4.0, y: 5.0, z: 6.0)
         let result = point - vector
         #expect(result == Point3D(x: 1.0, y: 2.0, z: 3.0))
+    }
+
+    @Test func testSubtractingVector2() {
+        var point = Point3D(x: 5.0, y: 7.0, z: 9.0)
+        let vector = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        point -= vector
+        #expect(point == Point3D(x: 1.0, y: 2.0, z: 3.0))
     }
 
     @Test func testMultiplication() {
@@ -156,10 +201,23 @@ struct Point3DTests {
         #expect(point == Point3D(x: 3.0, y: 6.0, z: 9.0))
     }
 
+    @Test func testMultiplication4() {
+        let affine = AffineTransform3D()
+        let point1 = Point3D(x: 1.0, y: 2.0, z: 3.0)
+        let point2 = affine * point1
+        #expect(point2 == Point3D(x: 1.0, y: 2.0, z: 3.0))
+    }
+
     @Test func testDivision() {
         let point = Point3D(x: 4.0, y: 8.0, z: 12.0)
         let dividedPoint = point / 4.0
         #expect(dividedPoint == Point3D(x: 1.0, y: 2.0, z: 3.0))
+    }
+
+    @Test func testDivision2() {
+        var point = Point3D(x: 4.0, y: 8.0, z: 12.0)
+        point /= 4.0
+        #expect(point == Point3D(x: 1.0, y: 2.0, z: 3.0))
     }
 
     // MARK: - Primitive3D tests
@@ -219,10 +277,16 @@ struct Point3DTests {
         #expect(point == Point3D(x: 2.0, y: 6.0, z: 12.0))
     }
 
-    @Test func testUniformScalingPoint3D() {
+    @Test func testUniformlyScale() {
         var point = Point3D(x: 1.0, y: 2.0, z: 3.0)
         point.uniformlyScale(by: 3.0)
         #expect(point == Point3D(x: 3.0, y: 6.0, z: 9.0))
+    }
+
+    @Test func testUniformlyScaled() {
+        let point1 = Point3D(x: 1.0, y: 2.0, z: 3.0)
+        let point2 = point1.uniformlyScaled(by: 3.0)
+        #expect(point2 == Point3D(x: 3.0, y: 6.0, z: 9.0))
     }
 
     // MARK: - Translatable3D tests
@@ -232,5 +296,12 @@ struct Point3DTests {
         let vector = Vector3D(x: 4.0, y: 5.0, z: 6.0)
         point = point.translated(by: vector)
         #expect(point == Point3D(x: 5.0, y: 7.0, z: 9.0))
+    }
+
+    // MARK: - CustomStringConvertible
+
+    @Test func testDescription() {
+        let point = Point3D.zero
+        #expect(point.description == "(x: 0.0, y: 0.0, z: 0.0)")
     }
 }

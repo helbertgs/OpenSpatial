@@ -65,13 +65,13 @@ import Foundation
     /// - Complexity: O(1)
     @inline(__always)
     public subscript(index: Int) -> Double {
-        get {
+        get throws {
             switch index {
             case 0: return width
             case 1: return height
             case 2: return depth
             default:
-                fatalError("Index out of range. Valid indices are 0, 1, and 2.")
+                throw Error.outOfRage
             }
         }
     }
@@ -221,13 +221,13 @@ extension Size3D : Primitive3D {
 
     // MARK: - Transforming primitives
 
-    // Applies an affine transform.
+    /// Applies an affine transform.
     /// 
     /// - Parameter transform: The affine transform to apply.
     /// - Returns: A new transformed size.
     /// - Complexity: O(1)
     public func applying(_ transform: AffineTransform3D) -> Size3D {
-        fatalError("Size3D does not support applying affine transforms.")
+        self
     }
 }
 

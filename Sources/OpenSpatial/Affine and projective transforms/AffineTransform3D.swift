@@ -41,6 +41,12 @@ public struct AffineTransform3D : Codable, Copyable, Equatable, Hashable, Sendab
         get { matrix[row][column] }
         set { matrix[row][column] = newValue }
     }
+
+    // MARK: - Decomposing a 3D affine transform
+
+    public var scale: Size3D {
+        [matrix[0][0], matrix[1][1], matrix[2][2]]
+    }
 }
 
 extension AffineTransform3D : CustomStringConvertible {
