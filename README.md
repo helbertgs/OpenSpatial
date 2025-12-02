@@ -32,5 +32,5 @@ To do so, open Xcode, use **File** → **Swift Packages** → **Add Package Depe
 
 <p align="center">
 <img alt="Select the OpenSpatial target" 
-	src="" width="70%">
+	src="https://github.com/user-attachments/assets/6bf6b773-c1d6-4723-9e82-893ec5ec914c" width="70%">
 </p>
