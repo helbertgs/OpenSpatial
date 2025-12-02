@@ -240,9 +240,9 @@ extension Size3D : Scalable3D {
     /// - Complexity: O(1)
     @inline(__always)
     public func scaled(by size: Size3D) -> Size3D {
-        .init(width: self.width * size.width,
-              height: self.height * size.height,
-              depth: self.depth * size.depth)
+        .init(width: width * size.width,
+              height: height * size.height,
+              depth: depth * size.depth)
     }
 
     /// Returns a new entity scaled uniformly by the specified factor.
@@ -252,9 +252,7 @@ extension Size3D : Scalable3D {
     /// - Complexity: O(1)
     @inline(__always)
     public func uniformlyScaled(by scale: Double) -> Size3D {
-        .init(width: self.width * scale,
-              height: self.height * scale,
-              depth: self.depth * scale)
+        self * scale
     }
 }
 
