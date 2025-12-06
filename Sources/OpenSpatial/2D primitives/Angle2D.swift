@@ -171,3 +171,113 @@ extension Angle2D : Comparable {
         lhs.radians > rhs.radians && lhs.degrees > rhs.degrees
     }
 }
+
+extension Angle2D {
+
+    /// The value of π.
+    public static var pi: Double {
+        3.141592653589793238462643383279502884
+    }
+
+    /// Returns the square root of the value.
+    /// 
+    /// - Parameter value: The value to square root.
+    /// - Returns: The square root of the value.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func sqrt(_ value: Double) -> Double {
+        if value <= 0 { return 0 }
+        var guess = value > 1 ? value : 1.0
+        for _ in 0..<8 {
+            guess = 0.5 * (guess + value / guess)
+        }
+        return guess
+    }
+
+    /// Normalizes the angle.
+    /// 
+    /// - Parameter angle: The angle to normalize.
+    /// - Returns: The normalized angle.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func normalize(_ angle: Angle2D) -> Double {
+        self.normalize(angle.radians)
+    }
+
+    /// Normalizes the angle.
+    /// 
+    /// - Parameter value: The value to normalize.
+    /// - Returns: The normalized value.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func normalize(_ value: Double) -> Double {
+        guard value.isFinite else { return 0 }
+
+        var value = value
+        value = value.truncatingRemainder(dividingBy: 2 * pi)
+
+        if value > pi { value -= 2 * pi }
+        if value < -pi { value += 2 * pi }
+
+        return value
+    }
+
+    /// Returns the sine of the angle.
+    /// 
+    /// - Parameter value: The angle in radians.
+    /// - Returns: The sine of the angle.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func sin(_ value: Double) -> Double {
+        let x = normalize(value)
+        let x2 = x * x
+        let x3 = x2 * x
+        let x5 = x2 * x3
+        let x7 = x2 * x5
+        let x9 = x2 * x7
+        
+        return x - x3 / 6.0 + x5 / 120.0 - x7 / 5040.0 + x9 / 362880.0
+    }
+
+    /// Returns the cosine of the angle.
+    /// 
+    /// - Parameter value: The angle in radians.
+    /// - Returns: The cosine of the angle.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func cos(_ value: Double) -> Double {
+        let x = normalize(value)
+        let x2 = x * x
+        let x4 = x2 * x2
+        let x6 = x2 * x4
+        let x8 = x4 * x4
+        let x10 = x2 * x8
+        return 1 - x2 / 2.0 + x4 / 24.0 - x6 / 720.0 + x8 / 40320.0 - x10 / 3628800.0
+    }
+
+    /// Returns the tangent of the angle.
+    /// 
+    /// - Parameter value: The angle in radians.
+    /// - Returns: The tangent of the angle.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func tan(_ value: Double) -> Double {
+        sin(value) / cos(value)
+    }
+
+    /// Returns the arcsine of the angle.
+    /// 
+    /// - Parameter value: The angle in radians.
+    /// - Returns: The arcsine of the angle.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func asin(_ value: Double) -> Double {
+        let x = normalize(value)
+        let x2 = x * x
+        let x3 = x2 * x
+        let x5 = x2 * x3
+        let x7 = x2 * x5
+        let x9 = x2 * x7
+        return x + x3 / 6.0 + x5 / 120.0 + x7 / 5040.0 + x9 / 362880.0
+    }
+}

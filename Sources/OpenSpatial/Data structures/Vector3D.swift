@@ -445,3 +445,21 @@ extension Vector3D : Scalable3D {
         .init(x: x * scale, y: y * scale, z: z * scale)
     }
 }
+
+extension Vector3D : Rotatable3D {
+
+    // MARK: - Rotatable3D
+
+    /// Returns a new entity rotated by the specified quaternion.
+    /// 
+    /// - Parameter quaternion: The quaternion to rotate the entity by.
+    /// - Returns: A new rotated entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func rotated(by quaternion: Quaternion3D) -> Vector3D {
+        let unit = quaternion.normalized
+        let quat = Quaternion3D(x: x, y: y, z: z, w: 0)
+        let rotated = unit * quat * unit.inverted()
+        return Vector3D(x: rotated.x, y: rotated.y, z: rotated.z)
+    }
+}
