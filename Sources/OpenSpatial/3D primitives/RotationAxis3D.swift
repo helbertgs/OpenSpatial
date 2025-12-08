@@ -103,32 +103,7 @@ extension RotationAxis3D : ExpressibleByArrayLiteral {
     /// - Parameter elements: An array of double-precision values.
     @inline(__always)
     public init(arrayLiteral elements: Double...) {
-        guard elements.count == 3 else {
-            fatalError("Invalid array literal for RotationAxis3D")
-        }
-
+        precondition(elements.count == 3, "Invalid array literal for \(Self.self)")
         self.init(x: elements[0], y: elements[1], z: elements[2])
-    }
-}
-
-extension RotationAxis3D : ExpressibleByFloatLiteral {
-
-    /// Creates a rotation axis from the specified float literal.
-    /// 
-    /// - Parameter value: A float literal.
-    @inline(__always)
-    public init(floatLiteral value: Double) {
-        self.init(x: Double(value), y: Double(value), z: Double(value))
-    }
-}
-
-extension RotationAxis3D : ExpressibleByIntegerLiteral {
-
-    /// Creates a rotation axis from the specified integer literal.
-    /// 
-    /// - Parameter value: An integer literal.
-    @inline(__always)
-    public init(integerLiteral value: Int) {
-        self.init(x: Double(value), y: Double(value), z: Double(value))
     }
 }

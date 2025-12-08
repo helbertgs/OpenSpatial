@@ -11,6 +11,12 @@ struct Rect3DTests {
         #expect(rect.min == Point3D.zero)
         #expect(rect.max == Point3D.zero)
         #expect(rect.center == Point3D.zero)
+        #expect(rect == .zero)
+        #expect(rect.isFinite == true)
+        #expect(rect.isNaN == false)
+        #expect(rect.isZero == true)
+        #expect(rect.description == "(origin: (x: 0.0, y: 0.0, z: 0.0), size: (width: 0.0, height: 0.0, depth: 0.0))")
+        #expect(rect.isEmpty == true)
     }
 
     @Test func testInitializationWithOriginAndSize() {
@@ -21,6 +27,30 @@ struct Rect3DTests {
         #expect(rect.min == origin)
         #expect(rect.max == Point3D(x: 1.0, y: 1.0, z: 1.0))
         #expect(rect.center == Point3D(x: 0.0, y: 0.0, z: 0.0))
+    }
+
+    @Test func testInitializationWithInfinityOriginAndSize() {
+        let origin = Point3D(x: .infinity, y: .infinity, z: .infinity)
+        let size = Size3D(width: .infinity, height: .infinity, depth: .infinity)
+        let rect = Rect3D(origin: origin, size: size)
+        #expect(rect.isFinite == false)
+        #expect(rect == .infinity)
+    }
+
+    @Test func testInitializationWithOriginAndSizeVectors() {
+        let origin = Vector3D.zero
+        let size = Vector3D(x: 5.0, y: 10.0, z: 15.0)
+        let rect = Rect3D(origin: origin, size: size)
+        #expect(rect.origin  == Point3D.zero)
+        #expect(rect.size == Size3D(width: 5.0, height: 10.0, depth: 15.0))
+    }
+
+     @Test func testInitializationWithCenterAndSizeVectors() {
+        let origin = Vector3D.zero
+        let size = Vector3D(x: 5.0, y: 10.0, z: 15.0)
+        let rect = Rect3D(center: origin, size: size)
+        #expect(rect.origin == Point3D(x: -2.5, y: -5.0, z: -7.5))
+        #expect(rect.size == Size3D(width: 5.0, height: 10.0, depth: 15.0))
     }
 
     @Test func testInitializationWithCenterAndSize() {
@@ -103,6 +133,12 @@ struct Rect3DTests {
         #expect(rect.contains(anyOf: points) == true)
     }
 
+     @Test func testNotContainsAnyOf() {
+        let rect = Rect3D(origin: Point3D(x: 1.0, y: 2.0, z: 3.0), size: Size3D(width: 4.0, height: 5.0, depth: 6.0))
+        let points = [Point3D(x: 6.0, y: 7.0, z: 8.0), Point3D(x: 9.0, y: 10.0, z: 11.0)]
+        #expect(rect.contains(anyOf: points) == false)
+    }
+
     @Test func testFormIntersection() {
         var rect = Rect3D(origin: Point3D(x: 1.0, y: 2.0, z: 3.0), size: Size3D(width: 4.0, height: 5.0, depth: 6.0))
         let otherRect = Rect3D(origin: Point3D(x: 2.0, y: 3.0, z: 4.0), size: Size3D(width: 3.0, height: 4.0, depth: 5.0))
@@ -122,6 +158,7 @@ struct Rect3DTests {
         let otherRect = Rect3D(origin: Point3D(x: 2.0, y: 3.0, z: 4.0), size: Size3D(width: 3.0, height: 4.0, depth: 5.0))
         let intersection = rect.intersection(otherRect)
         #expect(intersection == Rect3D(origin: Point3D(x: 2.0, y: 3.0, z: 4.0), size: Size3D(width: 3.0, height: 4.0, depth: 5.0)))
+        #expect(rect.intersects(otherRect) == true)
     }
 
     @Test func testUnion() {

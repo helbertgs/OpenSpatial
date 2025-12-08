@@ -71,6 +71,25 @@ public struct Quaternion3D : Copyable, Codable, Equatable, Hashable, Sendable {
         self.init(x: normalized.x * sx, y: normalized.y * sx, z: normalized.z * sx, w: cx)
     }
 
+     /// Accesses the x, y, or z value at the specified index.
+    /// 
+    /// - Parameter index: The index of the value to access. Valid indices are 0, 1, and 2.
+    /// - Returns: The x, y, or z value at the specified index.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public subscript(index: Int) -> Double {
+        get throws {
+            switch index {
+            case 0: return x
+            case 1: return y
+            case 2: return z
+            case 3: return w
+            default:
+                throw Error.outOfRage
+            }
+        }
+    }
+
     // MARK: - Checking characteristics
 
     /// The x-coordinate value.
@@ -175,10 +194,7 @@ extension Quaternion3D : ExpressibleByArrayLiteral {
     /// - Parameter elements: An array of double-precision values.
     @inline(__always)
     public init(arrayLiteral elements: Double...) {
-        guard elements.count == 4 else {
-            fatalError("Invalid array literal for Quaternion3D")
-        }
-
+        precondition(elements.count == 4, "Invalid array literal for \(Self.self)")
         self.init(x: elements[0], y: elements[1], z: elements[2], w: elements[3])
     }
 }

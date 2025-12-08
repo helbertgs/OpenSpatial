@@ -51,7 +51,7 @@ extension EulerAngles : CustomStringConvertible {
 
     /// A textual representation of the Euler angles.
     public var description: String {
-        return "(x: \(x), y: \(y), z: \(z), order: \(order.rawValue))"
+        return "(x: \(x.radians), y: \(y.radians), z: \(z.radians), order: \(order.rawValue))"
     }
 }
 

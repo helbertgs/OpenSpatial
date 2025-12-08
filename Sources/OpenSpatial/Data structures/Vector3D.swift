@@ -59,13 +59,13 @@ import Foundation
     /// - Complexity: O(1)
     @inline(__always)
     public subscript(index: Int) -> Double {
-        get {
+        get throws {
             switch index {
             case 0: return x
             case 1: return y
             case 2: return z
             default:
-                fatalError("Index out of range. Valid indices are 0, 1, and 2.")
+                throw Error.outOfRage
             }
         }
     }
@@ -179,7 +179,7 @@ extension Vector3D : ExpressibleByArrayLiteral {
     /// - Parameter elements: The elements of the array literal.
     @inline(__always)
     public init(arrayLiteral elements: Double...) {
-        precondition(elements.count == 3, "Array literal must contain exactly three elements.")
+        precondition(elements.count == 3, "Invalid array literal for \(Self.self)")
         (x, y, z) = (elements[0], elements[1], elements[2])
     }
 }
@@ -352,7 +352,7 @@ extension Vector3D : AdditiveArithmetic {
     /// - Returns: The difference of the vector and the point.
     /// - Complexity: O(1)
     @inline(__always)
-    public static func -(lhs: Vector3D, rhs: Point3D) -> Point3D {
+    public static func - (lhs: Vector3D, rhs: Point3D) -> Point3D {
         .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
     }
 
@@ -461,5 +461,16 @@ extension Vector3D : Rotatable3D {
         let quat = Quaternion3D(x: x, y: y, z: z, w: 0)
         let rotated = unit * quat * unit.inverted()
         return Vector3D(x: rotated.x, y: rotated.y, z: rotated.z)
+    }
+}
+
+extension Vector3D : Translatable3D {
+
+    /// Returns a new entity translated by the specified vector.
+    /// 
+    /// - Parameter vector: The vector by which to translate the entity.
+    /// - Returns: A new translated entity.
+    public func translated(by vector: Vector3D) -> Vector3D {
+        .init(x: x + vector.x, y: y + vector.y, z: z + vector.z)
     }
 }

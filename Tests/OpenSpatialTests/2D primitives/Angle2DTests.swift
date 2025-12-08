@@ -97,4 +97,45 @@ struct Angle2DTests {
         #expect(angle1 <= angle2)
         #expect(angle2 >= angle1)
     }
+
+    @Test func testPi() {
+        let pi = Angle2D.pi
+        #expect(pi == Double.pi)
+    }
+
+    @Test func testSqrt() {
+        let value = 25.0
+        let sqrt = Angle2D.sqrt(value)
+        #expect(sqrt == 5.0)
+    }
+
+    @Test func testNormalizeAngle() {
+        let angle = Angle2D(radians: 4 * Double.pi)
+        let normalized = Angle2D.normalize(angle)
+        #expect(normalized == 0.0)
+    }
+
+    @Test func testNormalizeValue() {
+        let value = 5 * Double.pi / 2
+        let normalized = Angle2D.normalize(value)
+        #expect(normalized == Double.pi / 2)
+    }
+
+    @Test func testSine() {
+        let angle = Double.pi / 2
+        let sine = Angle2D.sin(angle)
+        #expect(sine.rounded(toPlaces: 2) == 1.0)
+    }
+
+    @Test func testCosine() {
+        let angle = Double.pi
+        let cosine = Angle2D.cos(angle)
+        #expect(cosine.rounded(toPlaces: 2) == -1.0)
+    }
+
+    @Test func testTangent() {
+        let angle = Double.pi / 4
+        let tangent = Angle2D.tan(angle)
+        #expect(tangent.rounded(toPlaces: 2) == 1.0)
+    }
 }

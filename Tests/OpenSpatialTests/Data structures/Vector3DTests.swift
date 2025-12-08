@@ -33,6 +33,28 @@ struct Vector3DTests {
         #expect(vector.z == 3.0)
     }
 
+    @Test func testInitializationWithSize() {
+        let vector = Vector3D(Size3D(width: 1.0, height: 2.0, depth: 3.0))
+        #expect(vector.x == 1.0)
+        #expect(vector.y == 2.0)
+        #expect(vector.z == 3.0)
+    }
+
+    @Test func testSubscriptGetter() throws {
+        let point = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        #expect(try point[0] == 1.0)
+        #expect(try point[1] == 2.0)
+        #expect(try point[2] == 3.0)
+    }
+
+    @Test func testSubscriptError() throws {
+        let point = Vector3D.zero
+        #expect(throws: OpenSpatial.Error.self) {
+            try point[4] == 0
+        }
+    }
+
+
     // MARK: - Geometry functions tests
 
     @Test func testDotProduct() {
@@ -154,6 +176,27 @@ struct Vector3DTests {
         #expect(vector1 == Vector3D(x: 5.0, y: 7.0, z: 9.0))
     }
 
+    @Test func testAddition3() {
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let size = Size3D(width: 4.0, height: 5.0, depth: 6.0)
+        let result = vector + size
+        #expect(result == Size3D(width: 5.0, height: 7.0, depth: 9.0))
+    }
+
+    @Test func testAddition4() {
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let size = Size3D(width: 4.0, height: 5.0, depth: 6.0)
+        let result = size + vector
+        #expect(result == Size3D(width: 5.0, height: 7.0, depth: 9.0))
+    }
+
+    @Test func testAddition5() {
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let point = Point3D(x: 4.0, y: 5.0, z: 6.0)
+        let result = vector + point
+        #expect(result == Point3D(x: 5.0, y: 7.0, z: 9.0))
+    }
+
     @Test func testSubtraction() {
         let vector1 = Vector3D(x: 4.0, y: 5.0, z: 6.0)
         let vector2 = Vector3D(x: 1.0, y: 2.0, z: 3.0)
@@ -167,6 +210,28 @@ struct Vector3DTests {
         vector1 -= vector2
         #expect(vector1 == Vector3D(x: 3.0, y: 3.0, z: 3.0))
     }
+
+    @Test func testSubtraction4() {
+        let vector = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let size = Size3D(width: 1.0, height: 2.0, depth: 3.0)
+        let result = vector - size
+        #expect(result == Size3D(width: 3.0, height: 3.0, depth: 3.0))
+    }
+
+    @Test func testSubtraction5() {
+        let vector = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let size = Size3D(width: 1.0, height: 2.0, depth: 3.0)
+        let result = size - vector
+        #expect(result == Size3D(width: -3.0, height: -3.0, depth: -3.0))
+    }
+
+    @Test func testSubtraction6() {
+        let vector = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let point = Point3D(x: 1.0, y: 2.0, z: 3.0)
+        let result = vector - point
+        #expect(result == Point3D(x: 3.0, y: 3.0, z: 3.0))
+    }
+
 
     @Test func testDivision() {
         let vector = Vector3D(x: 4.0, y: 8.0, z: 12.0)
@@ -229,6 +294,19 @@ struct Vector3DTests {
         #expect(transformed == Vector3D(x: 10.0, y: 40.0, z: 90.0))
     }
 
+    @Test func testApplyAffineTransform() {
+        var vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let transform = AffineTransform3D(matrix: [
+            [10.0, 0.0, 0.0, 0.0],
+            [0.0, 20.0, 0.0, 0.0],
+            [0.0, 0.0, 30.0, 0.0],
+            [0.0, 0.0, 0.0,  1.0]
+        ])
+        
+        vector.apply(transform)
+        #expect(vector == Vector3D(x: 10.0, y: 40.0, z: 90.0))
+    }
+
     // MARK: - Scalable3D tests
 
     @Test func testScalingVector3D() {
@@ -241,5 +319,47 @@ struct Vector3DTests {
         var vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
         vector.uniformlyScale(by: 3.0)
         #expect(vector == Vector3D(x: 3.0, y: 6.0, z: 9.0))
+    }
+
+    @Test func testUniformScaledVector3D() {
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let scaled = vector.uniformlyScaled(by: 3.0)
+        #expect(scaled == Vector3D(x: 3.0, y: 6.0, z: 9.0))
+    }
+
+    // MARK: - Translatable3D tests
+
+    @Test func testTranslatingVector3D() {
+        var vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let translation = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        vector.translate(by: translation)
+        #expect(vector == Vector3D(x: 5.0, y: 7.0, z: 9.0))
+    }
+
+    @Test func testTranslatedByVector3D() {
+        let vector = Vector3D(x: 1.0, y: 2.0, z: 3.0)
+        let translation = Vector3D(x: 4.0, y: 5.0, z: 6.0)
+        let expectation = vector.translated(by: translation)
+        #expect(expectation == Vector3D(x: 5.0, y: 7.0, z: 9.0))
+    }
+
+    // MARK: - Rotatable3D tests
+
+    @Test func testRotatedVector3D() {
+        let vector = Vector3D(x: 1.0, y: 0.0, z: 0.0)
+        let quaternion = Quaternion3D(angle: Angle2D(radians: .pi / 2), axis: .up)
+        let result = vector.rotated(by: quaternion)
+        #expect(result.x.rounded(toPlaces: 2) == 0.0)
+        #expect(result.y.rounded(toPlaces: 2) == 0.0)
+        #expect(result.z.rounded(toPlaces: 2) == -1.0)
+    }
+
+    @Test func testRotateVector3D() {
+        var vector = Vector3D(x: 1.0, y: 0.0, z: 0.0)
+        let quaternion = Quaternion3D(angle: Angle2D(radians: .pi / 2), axis: .up)
+        vector.rotate(by: quaternion)
+        #expect(vector.x.rounded(toPlaces: 2) == 0.0)
+        #expect(vector.y.rounded(toPlaces: 2) == 0.0)
+        #expect(vector.z.rounded(toPlaces: 2) == -1.0)
     }
 }

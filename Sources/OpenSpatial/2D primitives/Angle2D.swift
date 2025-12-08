@@ -206,20 +206,18 @@ extension Angle2D {
 
     /// Normalizes the angle.
     /// 
+    /// 
     /// - Parameter value: The value to normalize.
     /// - Returns: The normalized value.
     /// - Complexity: O(1)
     @inline(__always)
     public static func normalize(_ value: Double) -> Double {
-        guard value.isFinite else { return 0 }
+        var x = value.truncatingRemainder(dividingBy: 2 * pi)
 
-        var value = value
-        value = value.truncatingRemainder(dividingBy: 2 * pi)
+        if x > pi { x -= 2 * pi }
+        if x <= -pi { x += 2 * pi }
 
-        if value > pi { value -= 2 * pi }
-        if value < -pi { value += 2 * pi }
-
-        return value
+        return x
     }
 
     /// Returns the sine of the angle.
@@ -229,14 +227,26 @@ extension Angle2D {
     /// - Complexity: O(1)
     @inline(__always)
     public static func sin(_ value: Double) -> Double {
+
+        func taylor(_ x: Double) -> Double {
+            let x2 = x * x
+            let x3 = x2 * x
+            let x5 = x2 * x3
+            let x7 = x2 * x5
+            let x9 = x2 * x7
+            
+            return x - x3 / 6.0 + x5 / 120.0 - x7 / 5040.0 + x9 / 362880.0 
+        }
+
         let x = normalize(value)
-        let x2 = x * x
-        let x3 = x2 * x
-        let x5 = x2 * x3
-        let x7 = x2 * x5
-        let x9 = x2 * x7
-        
-        return x - x3 / 6.0 + x5 / 120.0 - x7 / 5040.0 + x9 / 362880.0
+
+        if x > .pi / 2 {
+            return taylor(.pi - x)
+        } else if x < -(.pi / 2) {
+            return -taylor(-.pi - x)
+        } else {
+            return taylor(x)
+        }
     }
 
     /// Returns the cosine of the angle.
@@ -263,21 +273,5 @@ extension Angle2D {
     @inline(__always)
     public static func tan(_ value: Double) -> Double {
         sin(value) / cos(value)
-    }
-
-    /// Returns the arcsine of the angle.
-    /// 
-    /// - Parameter value: The angle in radians.
-    /// - Returns: The arcsine of the angle.
-    /// - Complexity: O(1)
-    @inline(__always)
-    public static func asin(_ value: Double) -> Double {
-        let x = normalize(value)
-        let x2 = x * x
-        let x3 = x2 * x
-        let x5 = x2 * x3
-        let x7 = x2 * x5
-        let x9 = x2 * x7
-        return x + x3 / 6.0 + x5 / 120.0 + x7 / 5040.0 + x9 / 362880.0
     }
 }
