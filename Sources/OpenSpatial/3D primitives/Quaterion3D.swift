@@ -32,7 +32,6 @@ public struct Quaternion3D : Copyable, Codable, Equatable, Hashable, Sendable {
     /// - Parameter eulerAngles: The Euler angles of the quaternion.
     @inline(__always)
     public init(_ angles: EulerAngles, order: EulerAngles.Order = .xyz) {
-
         let x = angles.x.radians
         let y = angles.y.radians
         let z = angles.z.radians
@@ -64,11 +63,11 @@ public struct Quaternion3D : Copyable, Codable, Equatable, Hashable, Sendable {
 
     @inline(__always)
     public init(angle: Angle2D, axis: Vector3D) {
-        let normalized = axis.normalized
+        let n = axis.normalized
         let x = angle.radians * 0.5
-        let sx = Angle2D.sin(x)
+        let sx = sin(x)
         let cx = Angle2D.cos(x)
-        self.init(x: normalized.x * sx, y: normalized.y * sx, z: normalized.z * sx, w: cx)
+        self.init(x: n.x * sx, y: n.y * sx, z: n.z * sx, w: cx)
     }
 
      /// Accesses the x, y, or z value at the specified index.
@@ -109,12 +108,30 @@ public struct Quaternion3D : Copyable, Codable, Equatable, Hashable, Sendable {
 
     /// The Euler angles of the quaternion.
     public var eulerAngles: EulerAngles {
-        let angle = 2 * acos(w)
-        let sin = Angle2D.sqrt(1 - w * w)
-        let x = angle * x / sin
-        let y = angle * y / sin
-        let z = angle * z / sin
-        return EulerAngles(x: Angle2D(radians: x), y: Angle2D(radians: y), z: Angle2D(radians: z), order: .xyz)
+        let q = self.normalized
+
+        let sinp = 2.0 * (q.w*q.x + q.y*q.z)
+        let cosp = 1.0 - 2.0 * (q.x*q.x + q.y*q.y)
+        let pitch = atan2(sinp, cosp)
+
+        let siny = 2.0 * (q.w*q.y - q.z*q.x)
+        let yaw: Double
+        if abs(siny) >= 1 {
+            yaw = siny > 0 ? Double.pi/2 : -Double.pi/2
+        } else {
+            yaw = asin(siny)
+        }
+
+        let sinr = 2.0 * (q.w*q.z + q.x*q.y)
+        let cosr = 1.0 - 2.0 * (q.y*q.y + q.z*q.z)
+        let roll = atan2(sinr, cosr)
+
+        return .init(
+            x: .init(radians: pitch), 
+            y: .init(radians: yaw), 
+            z: .init(radians: roll),
+            order: .xyz
+        )
     }
 
     /// The squared length of the quaternion.
@@ -239,5 +256,44 @@ extension Quaternion3D : Primitive3D {
         let z = 0.5 * Angle2D.sqrt(1 + transform.matrix[2][2] - transform.matrix[0][0] - transform.matrix[1][1])
 
         return Quaternion3D(x: x, y: y, z: z, w: w)
+    }
+
+    // MARK: - Transforing 3D Rotations structure
+
+    public static func slerp(_ a: Quaternion3D, _ b: Quaternion3D, t: Double) -> Quaternion3D {
+        let q1 = a.normalized
+        var q2 = b.normalized
+
+        var dot = q1.x*q2.x + q1.y*q2.y + q1.z*q2.z + q1.w*q2.w
+
+        if dot < 0.0 {
+            q2 = Quaternion3D(x: -q2.x, y: -q2.y, z: -q2.z, w: -q2.w)
+            dot = -dot
+        }
+
+        if dot > 0.9995 {
+            return Quaternion3D(
+                x: q1.x + (q2.x - q1.x)*t,
+                y: q1.y + (q2.y - q1.y)*t,
+                z: q1.z + (q2.z - q1.z)*t,
+                w: q1.w + (q2.w - q1.w)*t
+            ).normalized
+        }
+
+        let theta0 = acos(dot)
+        let theta = theta0 * t
+
+        let sin_theta = sin(theta)
+        let sin_theta0 = sin(theta0)
+
+        let s0 = cos(theta) - dot * sin_theta / sin_theta0
+        let s1 = sin_theta / sin_theta0
+
+        return Quaternion3D(
+            x: q1.x * s0 + q2.x * s1,
+            y: q1.y * s0 + q2.y * s1,
+            z: q1.z * s0 + q2.z * s1,
+            w: q1.w * s0 + q2.w * s1
+        )
     }
 }
