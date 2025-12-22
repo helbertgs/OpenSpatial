@@ -1,6 +1,13 @@
 import Foundation
 
-/// A quaternion that represents a 3D rotation.
+/// Quaternions are used to represent rotations.
+/// 
+/// A quaternion is a four-tuple of real numbers {x,y,z,w}. 
+/// A quaternion is a mathematically convenient alternative to the euler angle representation. 
+/// You can interpolate a quaternion without experiencing gimbal lock. 
+/// You can also use a quaternion to concatenate a series of rotations into a single representation.
+/// 
+/// OpenSpatial internally uses Quaternions to represent all rotations.
 @frozen
 public struct Quaternion3D : Copyable, Codable, Equatable, Hashable, Sendable {
 

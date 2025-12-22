@@ -437,3 +437,33 @@ extension Point3D : CustomStringConvertible {
         "(x: \(x), y: \(y), z: \(z))"
     }
 }
+
+extension Point3D : Rotatable3D {
+
+    // MARK: - Instance methods
+
+    /// Returns a new entity rotated by the specified quaternion.
+    /// 
+    /// - Parameter quaternion: A quaternion that defines the rotation.
+    /// - Returns: A new rotated entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func rotated(by quaternion: Quaternion3D) -> Point3D {
+        let qx = quaternion.x
+        let qy = quaternion.y
+        let qz = quaternion.z
+        let qw = quaternion.w
+
+        // Calculate the rotated coordinates
+        let ix =  qw * x + qy * z - qz * y
+        let iy =  qw * y + qz * x - qx * z
+        let iz =  qw * z + qx * y - qy * x
+        let iw = -qx * x - qy * y - qz * z
+
+        let rx = ix * qw + iw * -qx + iy * -qz - iz * -qy
+        let ry = iy * qw + iw * -qy + iz * -qx - ix * -qz
+        let rz = iz * qw + iw * -qz + ix * -qy - iy * -qx
+
+        return Point3D(x: rx, y: ry, z: rz)
+    }
+}

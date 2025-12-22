@@ -29,13 +29,13 @@ public struct EulerAngles : Copyable, Codable, Equatable, Hashable, Sendable {
 
     // MARK: - Checking characteristics
 
-    /// The angle around the x-axis.
+    /// The angle around the x-axis (Pitch)
     public var x: Angle2D
 
-    /// The angle around the y-axis.
+    /// The angle around the y-axis (Yaw).
     public var y: Angle2D
 
-    /// The angle around the z-axis.
+    /// The angle around the z-axis (Roll).
     public var z: Angle2D
 
     /// The order of the angles.
