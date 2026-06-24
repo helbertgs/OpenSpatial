@@ -1,6 +1,6 @@
 # OpenSpatial
 
-![Swift](https://img.shields.io/badge/Swift-6.0%20%7C%206.1%20%7C%206.2%20%7C%206.3-orange.svg)
+![Swift](https://img.shields.io/badge/Swift-6.x-orange.svg)
 ![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%20%7C%20Windows%20%7C%20Wasm%20%7C%20Android-blue)
 [![Build and Test on MacOS](https://github.com/helbertgs/OpenSpatial/actions/workflows/MacOS.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/MacOS.yml)
 [![Build and Test on Ubuntu](https://github.com/helbertgs/OpenSpatial/actions/workflows/Linux.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/Linux.yml)
@@ -152,7 +152,9 @@ targets: [
 
 ## Requirements
 
-Minimum supported toolchain: Swift 6.0
+| Component | Version |
+|------------|---------|
+| Swift | 6.0+ |
 
 ## Supported Platforms
 
@@ -162,7 +164,7 @@ The project is continuously tested on:
 - Ubuntu Linux
 - Windows
 
-Additional support exists for:
+Additional support is expected to work on:
 
 - iOS
 - tvOS
