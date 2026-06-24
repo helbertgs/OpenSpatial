@@ -1,0 +1,560 @@
+
+// Vector3D.swift
+// This source file is part of the OpenSpatial open source project
+//
+// Copyright (c) 2026 Helbert Gomes. All rights reserved.
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//
+// See https://swift.org/LICENSE.txt for license information
+// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+
+import Foundation
+
+/// A three-element vector.
+@frozen public struct Vector3D: Codable, Equatable, Hashable, Sendable {
+
+    // MARK: - Creating a vector
+
+    /// Creates a vector.
+    @inline(__always)
+    public init() {
+        (x, y, z) = (0, 0, 0)
+    }
+
+    /// Creates a vector from the specified double-precision values.
+    ///
+    /// - Parameters:
+    ///   - x: A double-precision value that specifies the x value. The default is `0`.
+    ///   - y: A double-precision value that specifies the y value. The default is `0`.
+    ///   - z: A double-precision value that specifies the z value. The default is `0`.
+    @inline(__always)
+    public init(x: Double = 0, y: Double = 0, z: Double = 0) {
+        (self.x, self.y, self.z) = (x, y, z)
+    }
+
+    /// Creates a vector from the specified floating-point values.
+    ///
+    /// - Parameters:
+    ///   - x: A floating-point value that specifies the x value.
+    ///   - y: A floating-point value that specifies the y value.
+    ///   - z: A floating-point value that specifies the z value.
+    @inline(__always)
+    public init<T>(x: T, y: T, z: T) where T: BinaryFloatingPoint {
+        (self.x, self.y, self.z) = (Double(x), Double(y), Double(z))
+    }
+
+    /// Creates a vector from the specified Spatial size structure.
+    ///
+    /// - Parameter size: A size structure that specifies the elememnt values.
+    @inline(__always)
+    public init(_ size: Size3D) {
+        (x, y, z) = (size.width, size.height, size.depth)
+    }
+
+    /// Creates a vector from the specified Spatial point structure.
+    ///
+    /// - Parameter point: A point structure that specifies the element values.
+    @inline(__always)
+    public init(_ point: Point3D) {
+        (x, y, z) = (point.x, point.y, point.z)
+    }
+
+    // MARK: - Inspecting a vector’s properties
+
+    /// The x-element value.
+    public let x: Double
+
+    /// The y-element value.
+    public let y: Double
+
+    /// The z-element value.
+    public let z: Double
+
+    /// Accesses the x, y, or z value at the specified index.
+    ///
+    /// - Parameter index: The index of the value to access. Valid indices are 0, 1, and 2.
+    /// - Returns: The x, y, or z value at the specified index.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public subscript(index: Int) -> Double {
+        get throws {
+            switch index {
+            case 0: return x
+            case 1: return y
+            case 2: return z
+            default:
+                throw Error.outOfRage
+            }
+        }
+    }
+
+    // MARK: - Geometry functions
+
+    /// Returns the cross product of the vector and the specified vector.
+    ///
+    /// - Parameter other: The second vector.
+    /// - Returns: The cross product vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func cross(_ other: Vector3D) -> Vector3D {
+        .init(
+            x: y * other.z - z * other.y,
+            y: z * other.x - x * other.z,
+            z: x * other.y - y * other.x
+        )
+    }
+
+    /// Returns the dot product of the vector and the specified vector.
+    ///
+    /// - Parameter other: The second vector.
+    /// - Returns: The dot product value.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func dot(_ other: Vector3D) -> Double {
+        x * other.x + y * other.y + z * other.z
+    }
+
+    /// The length (magnitude) of the vector.
+    public var length: Double {
+        sqrt(x * x + y * y + z * z)
+    }
+
+    /// The squared length of the vector.
+    public var lengthSquared: Double {
+        x * x + y * y + z * z
+    }
+
+    /// Returns a Boolean value indicating whether this vector is approximately equal to another vector within a specified tolerance.
+    ///
+    /// - Parameters:
+    ///   - other: The other vector to compare.
+    ///   - tolerance: The maximum allowable difference between corresponding elements.
+    /// - Returns: `true` if the vectors are approximately equal within the specified tolerance; otherwise, `false`.
+    /// - Complexity: O(1)
+    public func isApproximatelyEqual(
+        to other: Vector3D, tolerance: Double = Foundation.sqrt(.ulpOfOne)
+    ) -> Bool {
+        abs(x - other.x) <= tolerance && abs(y - other.y) <= tolerance
+            && abs(z - other.z) <= tolerance
+    }
+
+    /// Normalizes the mutable vector.
+    ///
+    /// - Complexity: O(1)
+    public mutating func normalize() {
+        let len = length
+        guard len != 0 else { return }
+        self = Vector3D(x: x / len, y: y / len, z: z / len)
+    }
+
+    /// A new vector that represents the normalized copy of the current vector.
+    public var normalized: Vector3D {
+        var vector = self
+        vector.normalize()
+        return vector
+    }
+
+    /// Returns the vector projected onto the specified vector.
+    ///
+    /// - Parameter other: The second vector.
+    /// - Returns: The projected vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func projected(_ other: Vector3D) -> Vector3D {
+        let otherLengthSquared = other.lengthSquared
+        guard otherLengthSquared != 0 else { return .zero }
+        let scalar = dot(other) / otherLengthSquared
+        return Vector3D(x: other.x * scalar, y: other.y * scalar, z: other.z * scalar)
+    }
+
+    /// Returns the reflection direction of the incident vector and a specified unit normal vector.
+    ///
+    /// - Parameter normal: The unit normal vector.
+    /// - Returns: The reflected vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func reflected(_ normal: Vector3D) -> Vector3D {
+        let dotProduct = self.dot(normal)
+        return Vector3D(
+            x: self.x - 2 * dotProduct * normal.x,
+            y: self.y - 2 * dotProduct * normal.y,
+            z: self.z - 2 * dotProduct * normal.z
+        )
+    }
+
+    // MARK: - Type properties
+
+    /// A vector that contains the values 0, 0, -1.
+    public static let backward = Vector3D(x: 0, y: 0, z: -1)
+
+    /// A vector that contains the values 0, 0, 1.
+    public static let forward = Vector3D(x: 0, y: 0, z: 1)
+
+    /// A vector that contains the values -1, 0, 0.
+    public static let left = Vector3D(x: -1, y: 0, z: 0)
+
+    /// A vector that contains the values 1, 0, 0.
+    public static let right = Vector3D(x: 1, y: 0, z: 0)
+
+    /// A vector that contains the values 0, 1, 0.
+    public static let up = Vector3D(x: 0, y: 1, z: 0)
+
+    /// A vector that contains the values 0, -1, 0.
+    public static let down = Vector3D(x: 0, y: -1, z: 0)
+}
+
+extension Vector3D: ExpressibleByArrayLiteral {
+
+    /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameter elements: The elements of the array literal.
+    @inline(__always)
+    public init(arrayLiteral elements: Double...) {
+        precondition(elements.count == 3, "Invalid array literal for \(Self.self)")
+        (x, y, z) = (elements[0], elements[1], elements[2])
+    }
+}
+
+extension Vector3D: AdditiveArithmetic {
+
+    // MARK: - Applying arithmetic operations
+
+    /// The zero vector.
+    public static let zero = Vector3D()
+
+    /// Returns a vector that’s the product of a vector and a scalar value.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left-hand-side value.
+    ///   - rhs: The right-hand-side scalar value.
+    /// - Returns: The product of the vector and the scalar.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func * (lhs: Vector3D, rhs: Double) -> Vector3D {
+        .init(x: lhs.x * rhs, y: lhs.y * rhs, z: lhs.z * rhs)
+    }
+
+    /// Multiplies a vector and a double-precision value, and stores the result in the left-hand-side variable.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left-hand-side value.
+    ///   - rhs: The right-hand-side value.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func *= (lhs: inout Vector3D, rhs: Double) {
+        lhs = lhs * rhs
+    }
+
+    /// Adds two vectors and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    /// - Returns: The sum of the two vectors.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Vector3D, rhs: Vector3D) -> Vector3D {
+        .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
+    }
+
+    /// Adds a vector to a size and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The size.
+    /// - Returns: The sum of the vector and the size.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Vector3D, rhs: Size3D) -> Size3D {
+        .init(width: lhs.x + rhs.width, height: lhs.y + rhs.height, depth: lhs.z + rhs.depth)
+    }
+
+    /// Adds a size to a vector and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The size.
+    ///   - rhs: The vector.
+    /// - Returns: The sum of the vector and the size.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Size3D, rhs: Vector3D) -> Size3D {
+        .init(width: lhs.width + rhs.x, height: lhs.height + rhs.y, depth: lhs.depth + rhs.z)
+    }
+
+    /// Adds a vector to a point and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The point.
+    ///   - rhs: The vector.
+    /// - Returns: The sum of the point and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Point3D, rhs: Vector3D) -> Point3D {
+        .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
+    }
+
+    /// Adds a vector to a point and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The point.
+    /// - Returns: The sum of the point and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func + (lhs: Vector3D, rhs: Point3D) -> Point3D {
+        .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z)
+    }
+
+    /// Adds the second vector to the first vector and stores the result in the first vector.
+    ///
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func += (lhs: inout Vector3D, rhs: Vector3D) {
+        lhs = lhs + rhs
+    }
+
+    /// Subtracts one vector from another and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    /// - Returns: The difference of the two vectors.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Vector3D, rhs: Vector3D) -> Vector3D {
+        .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
+    }
+
+    /// Subtracts the second vector from the first vector and stores the result in the first vector.
+    ///
+    /// - Parameters:
+    ///   - lhs: The first vector.
+    ///   - rhs: The second vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func -= (lhs: inout Vector3D, rhs: Vector3D) {
+        lhs = lhs - rhs
+    }
+
+    /// Subtracts a vector from a size and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The size.
+    /// - Returns: The difference of the vector and the size.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Vector3D, rhs: Size3D) -> Size3D {
+        .init(width: lhs.x - rhs.width, height: lhs.y - rhs.height, depth: lhs.z - rhs.depth)
+    }
+
+    /// Subtracts a size from a vector and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The size.
+    ///   - rhs: The vector.
+    /// - Returns: The difference of the size and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Size3D, rhs: Vector3D) -> Size3D {
+        .init(width: lhs.width - rhs.x, height: lhs.height - rhs.y, depth: lhs.depth - rhs.z)
+    }
+
+    /// Subtracts a vector from a point and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The point.
+    ///   - rhs: The vector.
+    /// - Returns: The difference of the point and the vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Point3D, rhs: Vector3D) -> Point3D {
+        .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
+    }
+
+    /// Subtracts a point from a vector and returns the result.
+    ///
+    /// - Parameters:
+    ///   - lhs: The vector.
+    ///   - rhs: The point.
+    /// - Returns: The difference of the vector and the point.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func - (lhs: Vector3D, rhs: Point3D) -> Point3D {
+        .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z)
+    }
+
+    /// Returns a vector with each element divided by a scalar value.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left-hand-side value.
+    ///   - rhs: The right-hand-side value.
+    /// - Returns: The resulting vector.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func / (lhs: Vector3D, rhs: Double) -> Vector3D {
+        .init(x: lhs.x / rhs, y: lhs.y / rhs, z: lhs.z / rhs)
+    }
+
+    /// Divides each element of the vector by a scalar value and stores the result in the left-hand-side variable.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left-hand-side value.
+    ///   - rhs: The right-hand-side value.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public static func /= (lhs: inout Vector3D, rhs: Double) {
+        lhs = lhs / rhs
+    }
+}
+
+extension Vector3D: Primitive3D {
+
+    // MARK: - Instance properties
+
+    /// A Boolean value that indicates whether the vector is finite.
+    public var isFinite: Bool {
+        x.isFinite && y.isFinite && z.isFinite
+    }
+
+    /// A Boolean value that indicates whether the vector contains any NaN values.
+    public var isNaN: Bool {
+        x.isNaN || y.isNaN || z.isNaN
+    }
+
+    /// A Boolean value that indicates whether the vector is zero.
+    public var isZero: Bool {
+        x == 0 && y == 0 && z == 0
+    }
+
+    // MARK: - Type properties
+
+    /// A vector with infinite values.
+    public static var infinity: Vector3D {
+        .init(x: .infinity, y: .infinity, z: .infinity)
+    }
+
+    // MARK: - Transforming primitives
+
+    /// Applies an affine transform.
+    ///
+    /// - Parameter transform: The affine transform to apply.
+    /// - Returns: A new transformed vector.
+    /// - Complexity: O(1)
+    public func applying(_ transform: AffineTransform3D) -> Vector3D {
+        let newX =
+            x * transform.matrix[0][0] + y * transform.matrix[1][0] + z * transform.matrix[2][0]
+            + transform.matrix[3][0]
+        let newY =
+            x * transform.matrix[0][1] + y * transform.matrix[1][1] + z * transform.matrix[2][1]
+            + transform.matrix[3][1]
+        let newZ =
+            x * transform.matrix[0][2] + y * transform.matrix[1][2] + z * transform.matrix[2][2]
+            + transform.matrix[3][2]
+        return Vector3D(x: newX, y: newY, z: newZ)
+    }
+}
+
+extension Vector3D: Scalable3D {
+
+    // MARK: - Instance methods
+
+    /// Returns a new entity scaled by the specified size.
+    ///
+    /// - Parameter size: A size that contains the scale factors for each axis.
+    /// - Returns: A new scaled entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func scaled(by size: Size3D) -> Vector3D {
+        .init(x: x * size.width, y: y * size.height, z: z * size.depth)
+    }
+
+    /// Returns a new entity scaled uniformly by the specified factor.
+    ///
+    /// - Parameter scale: A double-precision value that specifies the uniform scale factor.
+    /// - Returns: A new scaled entity.
+    /// - Complexity: O(1)
+    @inline(__always)
+    public func uniformlyScaled(by scale: Double) -> Vector3D {
+        .init(x: x * scale, y: y * scale, z: z * scale)
+    }
+}
+
+extension Vector3D: Rotatable3D {
+
+    // MARK: - Rotatable3D
+
+    /// Returns a new entity rotated by the specified quaternion.
+    ///
+    /// - Parameter quaternion: The quaternion to rotate the entity by.
+    /// - Returns: A new rotated entity.
+    /// - Complexity: O(1)
+    public func rotated(by quaternion: Quaternion3D) -> Vector3D {
+        let q = quaternion.normalized
+        // Optimised sandwich product v' = q * v * q⁻¹ via the cross-product form
+        // t = 2 * (q.xyz × v), v' = v + q.w * t + (q.xyz × t)
+        let tx = 2.0 * (q.y * z - q.z * y)
+        let ty = 2.0 * (q.z * x - q.x * z)
+        let tz = 2.0 * (q.x * y - q.y * x)
+        return Vector3D(
+            x: x + q.w * tx + (q.y * tz - q.z * ty),
+            y: y + q.w * ty + (q.z * tx - q.x * tz),
+            z: z + q.w * tz + (q.x * ty - q.y * tx)
+        )
+    }
+}
+
+extension Vector3D: Translatable3D {
+
+    /// Returns a new entity translated by the specified vector.
+    ///
+    /// - Parameter vector: The vector by which to translate the entity.
+    /// - Returns: A new translated entity.
+    /// - Complexity: O(1)
+    public func translated(by vector: Vector3D) -> Vector3D {
+        .init(x: x + vector.x, y: y + vector.y, z: z + vector.z)
+    }
+}
+
+extension Vector3D: ProjectiveTransformable3D {
+
+    /// Returns a transformed copy of the vector.
+    ///
+    /// Multiplies `[x, y, z, 0]` by the 4×4 projective matrix (direction
+    /// vector — translation is excluded). Divides by `w` if `w != 0`.
+    ///
+    /// - Parameter transform: A projective transform to apply.
+    /// - Returns: The transformed vector.
+    /// - Complexity: O(1)
+    public func applying(_ transform: ProjectiveTransform3D) -> Vector3D {
+        let m = transform.matrix
+        let tx = m[0][0] * x + m[1][0] * y + m[2][0] * z
+        let ty = m[0][1] * x + m[1][1] * y + m[2][1] * z
+        let tz = m[0][2] * x + m[1][2] * y + m[2][2] * z
+        let tw = m[0][3] * x + m[1][3] * y + m[2][3] * z
+        guard tw != 0 else { return Vector3D(x: tx, y: ty, z: tz) }
+        return Vector3D(x: tx / tw, y: ty / tw, z: tz / tw)
+    }
+}
+
+extension Vector3D: Shearable3D {
+
+    /// Returns a sheared vector.
+    ///
+    /// - Parameter shear: The axis and shear factors.
+    /// - Returns: The sheared vector.
+    /// - Complexity: O(1)
+    public func sheared(_ shear: AxisWithFactors) -> Vector3D {
+        switch shear {
+        case .xAxis(let ky, let kz):
+            return Vector3D(x: x + ky * y + kz * z, y: y, z: z)
+        case .yAxis(let kx, let kz):
+            return Vector3D(x: x, y: y + kx * x + kz * z, z: z)
+        case .zAxis(let kx, let ky):
+            return Vector3D(x: x, y: y, z: z + kx * x + ky * y)
+        }
+    }
+}
