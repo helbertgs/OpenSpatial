@@ -1,8 +1,10 @@
 # OpenSpatial
 
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Swift](https://img.shields.io/badge/Swift-6.x-orange.svg)
-![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%20%7C%20Windows%20%7C%20Wasm%20%7C%20Android-blue)
+<!-- ![Swift](https://img.shields.io/badge/Swift-6.x-orange.svg) -->
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fhelbertgs%2FOpenSpatial%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/helbertgs/OpenSpatial)
+<!-- ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%20%7C%20Windows%20%7C%20Wasm%20%7C%20Android-blue) -->
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fhelbertgs%2FOpenSpatial%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/helbertgs/OpenSpatial)
 [![CI](https://github.com/helbertgs/OpenSpatial/actions/workflows/ci.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/helbertgs/OpenSpatial/graph/badge.svg?token=7WrVJPx17w)](https://codecov.io/github/helbertgs/OpenSpatial)
 
@@ -170,6 +172,28 @@ Additional support is expected to work on:
 - WebAssembly (Wasm)
 - Android
 
+## Why OpenSpatial?
+
+| Feature | OpenSpatial | Apple Spatial |
+|----------|----------|----------|
+| Open Source | ✅ | ❌ |
+| Linux | ✅ | ❌ |
+| Windows | ✅ | ❌ |
+| Android | ✅ | ❌ |
+| Wasm | ✅ | ❌ |
+
+## Use Cases
+
+OpenSpatial can be used for:
+
+- 3D engines
+- CAD applications
+- Robotics
+- Simulators
+- AR/VR applications
+- Scientific visualization
+- Game development
+
 ## Documentation
 
 Full API documentation is generated with [DocC](https://www.swift.org/documentation/docc/) and available in the `docs/` folder and also in this link: [OpenSpatial](https://helbertgs.github.io/OpenSpatial/documentation/openspatial). You can also browse it locally by running:
@@ -180,7 +204,13 @@ swift package --disable-sandbox preview-documentation --target OpenSpatial
 
 ## Contributing
 
-Contributions are welcome! Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide covering setup, code style, testing, commit conventions, and how to submit a pull request.
+Contributions are welcome!
+
+Before contributing, please review:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- [SECURITY.md](SECURITY.md)
 
 ## License
 
