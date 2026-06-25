@@ -14,8 +14,25 @@ jobs:
       - name: Swift version
         run: swift --version
 
-      - name: Run tests with coverage
-        run: swift test --enable-code-coverage
+      - name: Build and Test
+        run: |
+          swift build \
+            --build-tests \
+            -c debug \
+            -Xswiftc -warnings-as-errors \
+            -Xswiftc -profile-generate \
+            -Xswiftc -profile-coverage-mapping \
+            --build-path .build-test-debug
+
+          swift test \
+            --skip-build \
+            --enable-code-coverage \
+            --build-path .build-test-debug
+
+          xcrun llvm-cov show \
+            -instr-profile=.build-test-debug/debug/codecov/default.profdata \
+            .build-test-debug/debug/OpenSpatialPackageTests.xctest/Contents/MacOS/OpenSpatialPackageTests \
+            > coverage.txt
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
