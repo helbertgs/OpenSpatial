@@ -1,9 +1,7 @@
 # OpenSpatial
 
 ![License](https://img.shields.io/badge/License-MIT-green)
-<!-- ![Swift](https://img.shields.io/badge/Swift-6.x-orange.svg) -->
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fhelbertgs%2FOpenSpatial%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/helbertgs/OpenSpatial)
-<!-- ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%20%7C%20Windows%20%7C%20Wasm%20%7C%20Android-blue) -->
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fhelbertgs%2FOpenSpatial%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/helbertgs/OpenSpatial)
 [![CI](https://github.com/helbertgs/OpenSpatial/actions/workflows/ci.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/helbertgs/OpenSpatial/graph/badge.svg?token=7WrVJPx17w)](https://codecov.io/github/helbertgs/OpenSpatial)
