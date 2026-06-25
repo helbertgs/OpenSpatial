@@ -3,10 +3,8 @@
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Swift](https://img.shields.io/badge/Swift-6.x-orange.svg)
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%20%7C%20Windows%20%7C%20Wasm%20%7C%20Android-blue)
-<!-- [![Build and Test on MacOS](https://github.com/helbertgs/OpenSpatial/actions/workflows/MacOS.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/MacOS.yml)
-[![Build and Test on Ubuntu](https://github.com/helbertgs/OpenSpatial/actions/workflows/Linux.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/Linux.yml)
-[![Build and Test on Windows](https://github.com/helbertgs/OpenSpatial/actions/workflows/Windows.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/Windows.yml)
-[![codecov](https://codecov.io/github/helbertgs/OpenSpatial/graph/badge.svg?token=7WrVJPx17w)](https://codecov.io/github/helbertgs/OpenSpatial) -->
+[![CI](https://github.com/helbertgs/OpenSpatial/actions/workflows/ci.yml/badge.svg)](https://github.com/helbertgs/OpenSpatial/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/github/helbertgs/OpenSpatial/graph/badge.svg?token=7WrVJPx17w)](https://codecov.io/github/helbertgs/OpenSpatial)
 
 Open-source implementation inspired by Apple's [Spatial](https://developer.apple.com/documentation/spatial) framework.
 `OpenSpatial` is not affiliated with, endorsed by, or maintained by Apple.
