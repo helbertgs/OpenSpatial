@@ -3,4 +3,6 @@ builder:
   configs:
     - documentation_targets:
         - OpenSpatial
-      swift_version: "6.0"
+
+external_links:
+  documentation: "https://helbertgs.github.io/OpenSpatial/documentation/openspatial"
