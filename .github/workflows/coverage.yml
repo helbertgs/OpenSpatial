@@ -1,0 +1,23 @@
+name: Coverage
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  coverage:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Run tests with coverage
+        run: swift test --enable-code-coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
