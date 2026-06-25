@@ -137,7 +137,7 @@ Add the dependency to your `Package.swift`:
 dependencies: [
     .package(
         url: "https://github.com/helbertgs/OpenSpatial.git",
-        from: "1.0.0"
+        from: "0.1.0"
     )
 ],
 targets: [
